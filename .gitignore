@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Lokale Dev-Tools (laufen nicht auf Hostinger)
+_serve.js
+_mobile-emulator.js
+
+# OS / Editor
+desktop.ini
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build-Artefakte
+*.zip
+*.log
