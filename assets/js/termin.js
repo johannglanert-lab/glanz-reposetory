@@ -4,7 +4,7 @@
   const TZ = 'Europe/Berlin';
   const MIN_DAYS_AHEAD = 3;
   const MAX_DAYS_AHEAD = 60;
-  const RECIPIENT = 'kontakt@glanzdesign.de';
+  const RECIPIENT = 'kontakt@glanzdesign.eu';
 
   const MONTHS_DE = [
     'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
