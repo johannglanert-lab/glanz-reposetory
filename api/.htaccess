@@ -1,0 +1,15 @@
+# Schutz für sensible Dateien im api-Ordner
+# config.local.php enthält SMTP-Zugangsdaten und darf NIEMALS aus dem Web abrufbar sein.
+
+<Files "config.local.php">
+    Require all denied
+</Files>
+
+<Files "config.example.php">
+    Require all denied
+</Files>
+
+# Alle Dateien, deren Namen mit Unterstrich beginnen, sind interne Libraries.
+<FilesMatch "^_">
+    Require all denied
+</FilesMatch>

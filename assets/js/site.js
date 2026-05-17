@@ -343,13 +343,28 @@
       status.className = 'contact-form__status';
 
       try {
-        await new Promise(resolve => setTimeout(resolve, 1200));
+        const formData = new FormData(form);
+        const response = await fetch(form.action || 'api/kontakt.php', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
 
-        status.textContent = 'Vielen Dank! Wir melden uns innerhalb von 48 Stunden bei Ihnen.';
-        status.className = 'contact-form__status contact-form__status--success';
-        form.reset();
+        let data = null;
+        try { data = await response.json(); } catch (_) { /* ignore */ }
+
+        if (response.ok && data && data.ok) {
+          status.textContent = 'Vielen Dank! Wir melden uns innerhalb von 48 Stunden bei Ihnen.';
+          status.className = 'contact-form__status contact-form__status--success';
+          form.reset();
+        } else {
+          status.textContent = (data && data.error)
+            ? data.error
+            : 'Es gab einen Fehler. Bitte versuchen Sie es später erneut oder schreiben Sie direkt an kontakt@glanzdesign.eu.';
+          status.className = 'contact-form__status contact-form__status--error';
+        }
       } catch (err) {
-        status.textContent = 'Es gab einen Fehler. Bitte versuchen Sie es später erneut.';
+        status.textContent = 'Verbindungsfehler. Bitte versuchen Sie es später erneut oder schreiben Sie direkt an kontakt@glanzdesign.eu.';
         status.className = 'contact-form__status contact-form__status--error';
       } finally {
         submitBtn.disabled = false;

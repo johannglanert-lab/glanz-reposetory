@@ -15,3 +15,7 @@ Thumbs.db
 # Build-Artefakte
 *.zip
 *.log
+
+# SMTP-Zugangsdaten — NIEMALS commiten!
+# config.local.php enthält das Postfach-Passwort und liegt nur auf dem Server.
+api/config.local.php

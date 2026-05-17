@@ -4,7 +4,7 @@
   const TZ = 'Europe/Berlin';
   const MIN_DAYS_AHEAD = 3;
   const MAX_DAYS_AHEAD = 60;
-  const RECIPIENT = 'kontakt@glanzdesign.eu';
+  const API_ENDPOINT = 'api/termin.php';
 
   const MONTHS_DE = [
     'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
@@ -305,12 +305,11 @@
     });
   });
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = $('#t-name');
     const email = $('#t-email');
     const phone = $('#t-phone');
-    const msgEl = $('#t-message');
 
     const valid = [name, email, phone].every(validateField);
     if (!valid) {
@@ -319,43 +318,65 @@
       return;
     }
 
-    const subject = `Terminanfrage – ${formatSelectedDate()} um ${selectedTime} Uhr`;
-    const body = [
-      'Hallo Glanz Design,',
-      '',
-      'ich möchte gerne einen Termin für ein kostenloses Erstgespräch vereinbaren.',
-      '',
-      'Wunschtermin: ' + formatSelectedDate(),
-      'Wunschuhrzeit: ' + selectedTime + ' Uhr',
-      '',
-      'Name: ' + name.value.trim(),
-      'E-Mail: ' + email.value.trim(),
-      'Telefon: ' + phone.value.trim(),
-      '',
-      'Anliegen:',
-      msgEl.value.trim() || '(keine weitere Beschreibung)',
-      '',
-      'Viele Grüße',
-      name.value.trim()
-    ].join('\r\n');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalLabel = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = 'Wird gesendet…';
+    }
 
-    const mailto = 'mailto:' + RECIPIENT +
-      '?subject=' + encodeURIComponent(subject) +
-      '&body=' + encodeURIComponent(body);
+    function showError(msg) {
+      let errBox = form.querySelector('.termin-form__error');
+      if (!errBox) {
+        errBox = document.createElement('div');
+        errBox.className = 'termin-form__error';
+        errBox.setAttribute('role', 'alert');
+        errBox.style.cssText = 'margin-top:1rem;padding:0.75rem 1rem;border-radius:0.5rem;background:#fee;color:#a00;font-size:0.95rem;';
+        const actions = form.querySelector('.termin-step__actions');
+        if (actions) actions.parentNode.insertBefore(errBox, actions);
+        else form.appendChild(errBox);
+      }
+      errBox.textContent = msg;
+    }
 
-    window.location.href = mailto;
+    try {
+      const formData = new FormData(form);
+      formData.set('date', formatSelectedDate());
+      formData.set('time', selectedTime);
 
-    setTimeout(() => {
-      step2.hidden = true;
-      step2.classList.remove('is-active');
-      stepSuccess.hidden = false;
-      stepSuccess.classList.add('is-active');
-      stepperItems.forEach((n) => {
-        n.classList.remove('stepper__item--active');
-        n.classList.add('stepper__item--done');
+      const response = await fetch(form.action || API_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
       });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 800);
+
+      let data = null;
+      try { data = await response.json(); } catch (_) { /* ignore */ }
+
+      if (response.ok && data && data.ok) {
+        step2.hidden = true;
+        step2.classList.remove('is-active');
+        stepSuccess.hidden = false;
+        stepSuccess.classList.add('is-active');
+        stepperItems.forEach((n) => {
+          n.classList.remove('stepper__item--active');
+          n.classList.add('stepper__item--done');
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      showError((data && data.error)
+        ? data.error
+        : 'Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie direkt an kontakt@glanzdesign.eu.');
+    } catch (err) {
+      showError('Verbindungsfehler. Bitte versuchen Sie es später erneut oder schreiben Sie direkt an kontakt@glanzdesign.eu.');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+      }
+    }
   });
 
   renderCalendar();

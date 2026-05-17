@@ -209,7 +209,11 @@
                     </div>
                 </div>
 
-                <form class="termin-form reveal reveal--delay-1" id="termin-form" novalidate>
+                <form class="termin-form reveal reveal--delay-1" id="termin-form" action="api/termin.php" method="post" novalidate>
+                    <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+                        <label for="t-website">Website (bitte leer lassen)</label>
+                        <input type="text" id="t-website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="termin-form__intro">
                         <h3 class="termin-form__title">Ihre Kontaktdaten</h3>
                         <p class="termin-form__text">Damit wir Sie zur gewählten Zeit erreichen.</p>
@@ -268,10 +272,10 @@
                             <path d="M14 24l7 7 13-15" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <h2 class="termin-success__title" id="success-heading">Fast geschafft!</h2>
+                    <h2 class="termin-success__title" id="success-heading">Anfrage gesendet!</h2>
                     <p class="termin-success__text">
-                        Ihr E-Mail-Programm wurde mit allen Daten geöffnet. Bitte senden Sie die
-                        Mail noch ab – wir bestätigen Ihren Termin dann innerhalb von 48 Stunden.
+                        Vielen Dank — Ihre Terminanfrage ist bei uns angekommen. Wir bestätigen
+                        Ihren Wunschtermin innerhalb von 48 Stunden per E-Mail.
                     </p>
                     <div class="termin-success__actions">
                         <a href="index.html" class="btn btn--primary btn--lg">

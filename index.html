@@ -805,7 +805,11 @@
             </div>
 
             <div class="contact__form-wrap reveal reveal--delay-1">
-                <form class="contact-form" id="contact-form" novalidate>
+                <form class="contact-form" id="contact-form" action="api/kontakt.php" method="post" novalidate>
+                    <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+                        <label for="f-website">Website (bitte leer lassen)</label>
+                        <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="form-field">
                         <label for="f-name" class="form-field__label">Ihr Name *</label>
                         <input type="text" id="f-name" name="name" class="form-field__input"
