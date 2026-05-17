@@ -15,6 +15,22 @@ echo "Zeit:        " . date('Y-m-d H:i:s') . "\n\n";
 
 require_once __DIR__ . '/_lib.php';
 
+echo "── Schritt 0: Was sieht PHP im api-Ordner? ──\n";
+echo "  Pfad: " . __DIR__ . "\n";
+$files = @scandir(__DIR__);
+if (is_array($files)) {
+    foreach ($files as $f) {
+        if ($f === '.' || $f === '..') continue;
+        $full = __DIR__ . DIRECTORY_SEPARATOR . $f;
+        $size = @filesize($full);
+        $readable = @is_readable($full) ? 'lesbar' : 'NICHT lesbar';
+        echo "  - " . $f . "   (" . $size . " Bytes, " . $readable . ")\n";
+    }
+} else {
+    echo "  (Ordner konnte nicht gelesen werden)\n";
+}
+echo "\n";
+
 echo "── Schritt 1: Konfiguration laden ──\n";
 try {
     $cfg = glanz_load_config();
