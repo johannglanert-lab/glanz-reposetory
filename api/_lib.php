@@ -5,24 +5,39 @@ require_once __DIR__ . '/_smtp.php';
 
 /**
  * Lädt die lokale SMTP-Konfiguration. Diese Datei liegt NUR auf dem Server
- * (per .gitignore vom Repository ausgeschlossen) und enthält das SMTP-Passwort.
+ * und enthält das SMTP-Passwort.
+ *
+ * Bevorzugter Ort: eine Ebene ÜBER public_html (z. B.
+ *   /home/USER/domains/glanzdesign.eu/glanz_config.php).
+ * Dort fasst Hostingers Git Auto-Deploy die Datei nicht an.
  *
  * @return array<string, mixed>
  */
 function glanz_load_config(): array
 {
-    $path = __DIR__ . '/config.local.php';
-    if (!file_exists($path)) {
-        throw new \RuntimeException(
-            'Konfigurationsdatei fehlt. Bitte api/config.local.php auf dem Server anlegen '
-            . '(siehe api/config.example.php als Vorlage).'
-        );
+    $candidates = [
+        // 1) Sichere Ablage: eine Ebene über public_html (außerhalb der Web-Wurzel,
+        //    außerhalb des Deploy-Pfads).
+        dirname(__DIR__, 2) . '/glanz_config.php',
+        // 2) Fallback: direkt im api-Ordner (wird bei jedem Auto-Deploy gelöscht).
+        __DIR__ . '/config.local.php',
+    ];
+
+    foreach ($candidates as $path) {
+        if (is_file($path)) {
+            $config = require $path;
+            if (!is_array($config)) {
+                throw new \RuntimeException('Konfigurationsdatei ungültig: ' . $path);
+            }
+            return $config;
+        }
     }
-    $config = require $path;
-    if (!is_array($config)) {
-        throw new \RuntimeException('Konfigurationsdatei ist ungültig.');
-    }
-    return $config;
+
+    throw new \RuntimeException(
+        'Konfigurationsdatei fehlt. Bitte anlegen unter: '
+        . dirname(__DIR__, 2) . '/glanz_config.php '
+        . '(Inhalt: siehe api/config.example.php).'
+    );
 }
 
 function glanz_send_mail(string $subject, string $body, string $replyName, string $replyEmail): void
