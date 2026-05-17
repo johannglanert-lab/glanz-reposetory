@@ -128,12 +128,19 @@ function glanz_require_post(): void
 
 /**
  * Honeypot-Check: Wenn das versteckte Feld ausgefüllt ist, ist es ein Bot.
- * Wir tun so als wäre alles ok (200), schicken aber NICHTS.
+ * Feldname '_hp_glanz' ist absichtlich kryptisch, damit Browser-Autofill ihn ignoriert.
+ *
+ * Hinweis: Aktuell geben wir bei Trigger einen sichtbaren Fehler zurück,
+ * damit Echte Submits nicht stillschweigend verschluckt werden, wenn der
+ * Schutz fälschlich greift. Später wieder still machen, sobald stabil.
  */
 function glanz_check_honeypot(): void
 {
-    $hp = trim((string) ($_POST['website'] ?? ''));
+    $hp = trim((string) ($_POST['_hp_glanz'] ?? ''));
     if ($hp !== '') {
-        glanz_json_response(200, ['ok' => true]);
+        glanz_json_response(400, [
+            'ok'    => false,
+            'error' => 'Spam-Schutz hat ausgelöst. Bitte direkt an kontakt@glanzdesign.eu schreiben.',
+        ]);
     }
 }
