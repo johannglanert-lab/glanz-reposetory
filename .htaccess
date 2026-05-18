@@ -1,0 +1,9 @@
+# HTML niemals zaeh cachen — Cache-Busting der JS-Versionen (?v=N) wirkt nur,
+# wenn der Browser frisches HTML laedt. Sonst sieht der Browser den neuen
+# Versionsstring nie und serviert die alte JS aus dem Disk-Cache weiter.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+</IfModule>
