@@ -1912,6 +1912,20 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   z-index: 1;
 }
 
+.project-card__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 2;
+}
+
+.project-card__image:has(img)::before {
+  display: none;
+}
+
 .project-card__image--restaurant {
   background: linear-gradient(135deg, #FF6B6B 0%, #C44569 100%);
 }
@@ -3117,6 +3131,16 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   flex-wrap: wrap;
 }
 
+.termin-grid__right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.termin-grid__right .termin-step__actions {
+  margin-top: 0;
+}
+
 .termin-step__back-link {
   display: inline-flex;
   align-items: center;
@@ -3144,7 +3168,7 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: var(--space-8);
-  align-items: start;
+  align-items: stretch;
 }
 
 /* Calendar */
