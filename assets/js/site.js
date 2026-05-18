@@ -122,18 +122,23 @@
   /* MODULE 3: COUNT-UP ANIMATION                                       */
   /* ────────────────────────────────────────────────────────────────── */
 
-  function animateCountUp(el) {
+  function animateCountUp(el, duration) {
     const target = parseInt(el.dataset.target, 10);
     const suffix = el.dataset.suffix || '';
-    const duration = 1800;
     const start = performance.now();
+    let lastValue = -1;
 
     function step(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(eased * target);
-      el.textContent = current + suffix;
+      // Nur schreiben, wenn der Wert sich tatsächlich geändert hat.
+      // Spart Reflow-Frames, besonders bei kleinen Targets (z.B. 20, 48).
+      if (current !== lastValue) {
+        el.textContent = current + suffix;
+        lastValue = current;
+      }
 
       if (progress < 1) {
         requestAnimationFrame(step);
@@ -154,16 +159,28 @@
       return;
     }
 
+    // Mobile: kürzere Count-Up-Dauer (1200ms vs 1800ms) und früherer
+    // Trigger, damit die Zahlen schon "laufen", wenn der Nutzer die
+    // Stats-Bar erreicht — fühlt sich auf kleinen Screens deutlich
+    // flüssiger an als das langsame, spätstartende Desktop-Tempo.
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+    const duration = isMobile ? 1200 : 1800;
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            statsSection.querySelectorAll('[data-count-up]').forEach(animateCountUp);
+            statsSection.querySelectorAll('[data-count-up]').forEach(el => {
+              animateCountUp(el, duration);
+            });
             observer.unobserve(statsSection);
           }
         });
       },
-      { threshold: 0.3 }
+      {
+        threshold: isMobile ? 0.15 : 0.3,
+        rootMargin: isMobile ? '0px 0px 12% 0px' : '0px'
+      }
     );
 
     observer.observe(statsSection);
@@ -182,6 +199,14 @@
       return;
     }
 
+    // Mobile: positiver rootMargin nach unten (15% Viewport-Höhe) +
+    // niedrigere Threshold (0.01). Das triggert die Reveal-Animation,
+    // BEVOR das Element ins Sichtfeld kommt. Beim schnellen Scrollen
+    // ist die Karte dann schon weitgehend fertig animiert, wenn der
+    // Daumen sie erreicht — keine "fliegen erst rein, wenn ich schon
+    // weiter bin"-Effekte mehr.
+    const isMobile = window.matchMedia('(max-width: 640px)').matches;
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -191,7 +216,10 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      {
+        threshold: isMobile ? 0.01 : 0.12,
+        rootMargin: isMobile ? '0px 0px 15% 0px' : '0px 0px -40px 0px'
+      }
     );
 
     targets.forEach(el => observer.observe(el));

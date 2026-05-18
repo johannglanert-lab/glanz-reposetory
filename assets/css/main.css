@@ -1252,6 +1252,12 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   color: var(--color-white);
   line-height: 1;
   letter-spacing: var(--tracking-tight);
+  /* Tabular-Nums: jede Ziffer gleich breit. Verhindert horizontalen
+     Layout-Shift während des Count-Ups (sichtbar als "abgehakt"-Ruckeln
+     besonders auf Mobile). */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  contain: layout style;
 }
 
 .stats-bar__label {
@@ -2531,13 +2537,15 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  /* translate3d statt translateY: erzwingt GPU-Layer-Promotion, die
+     Reveal-Animation läuft danach off-main-thread im Compositor. */
+  transform: translate3d(0, 28px, 0);
   transition: opacity var(--transition-slow), transform var(--transition-slow);
 }
 
 .reveal--visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .reveal--delay-1 { transition-delay: 100ms; }
@@ -2822,6 +2830,69 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
      direkt über der Kontakt-Spalte doppelt vertreten. */
   .site-footer__nav .site-footer__list li:nth-child(4) {
     display: none;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────── */
+  /* MOBILE MOTION & TAP RESPONSIVENESS                                  */
+  /* Ziel: Reveal-Animationen laufen flüssig auch bei schnellem Scroll;  */
+  /* Klicks/Taps reagieren sofort statt "abgehakt".                      */
+  /* Strikt mobile-only — Desktop/Tablet ≥641px bleiben unverändert.    */
+  /* ─────────────────────────────────────────────────────────────────── */
+
+  /* Reveal-Tuning: kürzere Reise (14px statt 28px), kürzere Dauer
+     (420ms statt 600ms), näher gestaffelte Delays. So sind Elemente
+     schnell genug "da", bevor der Daumen weitergeflickt hat. */
+  .reveal {
+    transform: translate3d(0, 14px, 0);
+    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal--visible {
+    transform: translate3d(0, 0, 0);
+  }
+  .reveal--delay-1 { transition-delay:  60ms; }
+  .reveal--delay-2 { transition-delay: 120ms; }
+  .reveal--delay-3 { transition-delay: 180ms; }
+
+  /* Tap-Highlight entfernen (sonst flackert iOS/Android beim Antippen
+     ein graues/blaues Rechteck — fühlt sich "abgehakt" an). */
+  a, button, .btn,
+  .mobile-nav__link, .mobile-nav__cta,
+  .site-footer__list a,
+  .faq__question,
+  .carousel__arrow, .carousel__dot,
+  .site-header__hamburger {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Tap-Feedback ersetzt das verlorene Default-Highlight durch eine
+     bewusste, schnelle Skalierungs-/Opacity-Reaktion. 90ms = unmittelbar
+     spürbar, aber nicht zappelig. */
+  .btn:active {
+    transform: scale(0.97);
+    transition: transform 90ms cubic-bezier(0.22, 1, 0.36, 1),
+                background 90ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mobile-nav__link:active,
+  .mobile-nav__cta:active,
+  .faq__question:active,
+  .carousel__arrow:active,
+  .carousel__dot:active,
+  .site-header__hamburger:active {
+    opacity: 0.55;
+    transition-duration: 90ms;
+  }
+  .site-footer__list a:active {
+    opacity: 0.6;
+  }
+
+  /* Backdrop-Blur des Headers reduzieren (20px → 10px). Auf günstigeren
+     Mobile-GPUs kostet 20px Blur beim Scrollen Frames; 10px sieht
+     visuell fast identisch aus, läuft aber spürbar runder. */
+  .site-header {
+    backdrop-filter: saturate(160%) blur(10px);
+    -webkit-backdrop-filter: saturate(160%) blur(10px);
   }
 }
 
