@@ -753,17 +753,16 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 }
 
 /* Links und CTA starten leicht abgesenkt + transparent und ziehen
-   gestaffelt nach. Stagger fühlt sich "lebendig" an, ohne zappelig
-   zu wirken. Jeder Link wird durch nth-child verzögert. Die transform-
-   und opacity-Übergänge laufen GPU-compositiert, die Link-Färbung
-   bleibt instant beim Hover (color var(--transition-fast) unverändert). */
+   gestaffelt nach. Dauer und Stagger bewusst langsam, damit jeder
+   Eintrag eigenständig reinfliegt statt im Pulk aufzupoppen.
+   GPU-compositierter Transform/Opacity; Hover-Färbung bleibt instant. */
 .mobile-nav__link,
 .mobile-nav__cta {
   opacity: 0;
-  transform: translate3d(0, 10px, 0);
+  transform: translate3d(0, 14px, 0);
   transition:
-    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
     color var(--transition-fast),
     background var(--transition-fast),
     box-shadow var(--transition-fast);
@@ -775,11 +774,11 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   transform: translate3d(0, 0, 0);
 }
 
-.mobile-nav--open .mobile-nav__list li:nth-child(1) .mobile-nav__link { transition-delay:  80ms,  80ms, 0s, 0s, 0s; }
-.mobile-nav--open .mobile-nav__list li:nth-child(2) .mobile-nav__link { transition-delay: 130ms, 130ms, 0s, 0s, 0s; }
-.mobile-nav--open .mobile-nav__list li:nth-child(3) .mobile-nav__link { transition-delay: 180ms, 180ms, 0s, 0s, 0s; }
-.mobile-nav--open .mobile-nav__list li:nth-child(4) .mobile-nav__link { transition-delay: 220ms, 220ms, 0s, 0s, 0s; }
-.mobile-nav--open .mobile-nav__list li:nth-child(5) .mobile-nav__cta  { transition-delay: 280ms, 280ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(1) .mobile-nav__link { transition-delay: 120ms, 120ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(2) .mobile-nav__link { transition-delay: 220ms, 220ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(3) .mobile-nav__link { transition-delay: 320ms, 320ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(4) .mobile-nav__link { transition-delay: 420ms, 420ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(5) .mobile-nav__cta  { transition-delay: 540ms, 540ms, 0s, 0s, 0s; }
 
 @media (min-width: 901px) {
   .site-header__nav { display: flex; }
@@ -2862,16 +2861,16 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   /* Strikt mobile-only — Desktop/Tablet ≥641px bleiben unverändert.    */
   /* ─────────────────────────────────────────────────────────────────── */
 
-  /* Reveal-Tuning: kürzere Reise (12px statt 28px), kürzere Dauer
-     (380ms statt 600ms), näher gestaffelte Delays. So sind Elemente
-     schnell genug "da", bevor der Daumen weitergeflickt hat.
-     will-change + backface-visibility erzwingen einen GPU-Compositor-
-     Layer BEVOR die Animation triggert — sonst muss der Browser im
-     ersten Frame promoten und das ruckelt sichtbar. */
+  /* Reveal-Tuning für Mobile: sichtbar sanftes Reinfliegen. Längere
+     Reise (28px), längere Dauer (720ms) und breitere Stagger-Delays —
+     der User soll die Bewegung beim Scrollen mitbekommen, nicht erst
+     ein bereits fertiges Element vorfinden. will-change + backface-
+     visibility erzwingen GPU-Layer-Promotion vor dem Trigger, sodass
+     der erste Frame nicht stockt. */
   .reveal {
-    transform: translate3d(0, 12px, 0);
-    transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate3d(0, 28px, 0);
+    transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -2879,9 +2878,9 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   .reveal--visible {
     transform: translate3d(0, 0, 0);
   }
-  .reveal--delay-1 { transition-delay:  50ms; }
-  .reveal--delay-2 { transition-delay: 100ms; }
-  .reveal--delay-3 { transition-delay: 150ms; }
+  .reveal--delay-1 { transition-delay: 120ms; }
+  .reveal--delay-2 { transition-delay: 220ms; }
+  .reveal--delay-3 { transition-delay: 320ms; }
 
   /* Tap-Highlight entfernen (sonst flackert iOS/Android beim Antippen
      ein graues/blaues Rechteck — fühlt sich "abgehakt" an). */

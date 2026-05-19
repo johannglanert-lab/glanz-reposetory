@@ -216,12 +216,13 @@
       return;
     }
 
-    // Mobile: positiver rootMargin nach unten (15% Viewport-Höhe) +
-    // niedrigere Threshold (0.01). Das triggert die Reveal-Animation,
-    // BEVOR das Element ins Sichtfeld kommt. Beim schnellen Scrollen
-    // ist die Karte dann schon weitgehend fertig animiert, wenn der
-    // Daumen sie erreicht — keine "fliegen erst rein, wenn ich schon
-    // weiter bin"-Effekte mehr.
+    // Mobile: leicht NACH unten verschobener rootMargin (-8%), damit
+    // die Reveal-Animation erst startet, wenn das Element wirklich im
+    // sichtbaren Bereich erscheint. Vorher triggerte sie 15% vor dem
+    // Viewport — beim normalen Scrolltempo war die Animation deshalb
+    // fertig, bevor das Element überhaupt sichtbar wurde (wirkte
+    // statisch). Threshold 0.05 reicht aus, damit auch flache
+    // Elemente am Rand zuverlässig auslösen.
     const isMobile = window.matchMedia('(max-width: 640px)').matches;
 
     const observer = new IntersectionObserver(
@@ -234,8 +235,8 @@
         });
       },
       {
-        threshold: isMobile ? 0.01 : 0.12,
-        rootMargin: isMobile ? '0px 0px 15% 0px' : '0px 0px -40px 0px'
+        threshold: isMobile ? 0.05 : 0.12,
+        rootMargin: isMobile ? '0px 0px -8% 0px' : '0px 0px -40px 0px'
       }
     );
 
