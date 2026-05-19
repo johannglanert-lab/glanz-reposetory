@@ -1963,6 +1963,14 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   display: block;
 }
 
+.project-card[data-category="restaurant"] .project-card__image img {
+  object-fit: contain;
+}
+
+.project-card[data-category="architecture"] .project-card__image img {
+  object-position: left center;
+}
+
 .project-card__body {
   padding: var(--space-8);
   display: flex;
