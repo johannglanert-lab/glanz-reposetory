@@ -11,11 +11,9 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-    <link rel="stylesheet" href="assets/css/main.css?v=5">
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin.woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/main.css?v=7">
 
     <noscript>
         <style>
@@ -584,7 +582,7 @@
                 <article class="project-card reveal" data-category="restaurant">
                     <a class="project-card__visual" href="https://trattorialunaverde.glanzdesign.eu" target="_blank" rel="noopener" aria-label="Trattoria Lunaverde Website ansehen">
                         <div class="project-card__image project-card__image--restaurant">
-                            <img src="assets/images/projects/lunaverde-hero.webp" alt="Trattoria Lunaverde – Website Vorschau" loading="lazy" decoding="async" width="560" height="436">
+                            <img src="assets/images/projects/lunaverde-hero.webp" alt="Trattoria Lunaverde – Website Vorschau" loading="lazy" decoding="async" width="1121" height="709">
                         </div>
                     </a>
                     <div class="project-card__body">
@@ -831,6 +829,15 @@
                         <label for="f-message" class="form-field__label">Worum geht es? *</label>
                         <textarea id="f-message" name="message" class="form-field__input form-field__input--textarea"
                                   placeholder="Erzählen Sie kurz von Ihrem Vorhaben…" rows="4" required></textarea>
+                        <span class="form-field__error" aria-live="polite"></span>
+                    </div>
+                    <div class="form-field form-field--consent">
+                        <label class="form-consent">
+                            <input type="checkbox" id="f-consent" name="consent" value="1" class="form-consent__checkbox" required>
+                            <span class="form-consent__text">
+                                Ich habe die <a href="legal/datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Beantwortung der Anfrage zu. *
+                            </span>
+                        </label>
                         <span class="form-field__error" aria-live="polite"></span>
                     </div>
                     <button type="submit" class="btn btn--primary btn--lg contact-form__submit">

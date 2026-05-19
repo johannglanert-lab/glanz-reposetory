@@ -12,11 +12,9 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-    <link rel="stylesheet" href="assets/css/main.css?v=5">
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin.woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/main.css?v=7">
 
     <noscript>
         <style>
@@ -246,6 +244,16 @@
                         <label for="t-message" class="form-field__label">Worum geht es? <span class="form-field__optional">(optional)</span></label>
                         <textarea id="t-message" name="message" class="form-field__input form-field__input--textarea"
                                   placeholder="Beschreiben Sie kurz Ihr Anliegen oder Vorhaben…" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-field form-field--consent">
+                        <label class="form-consent">
+                            <input type="checkbox" id="t-consent" name="consent" value="1" class="form-consent__checkbox" required>
+                            <span class="form-consent__text">
+                                Ich habe die <a href="legal/datenschutz.html" target="_blank" rel="noopener">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Terminkoordination zu. *
+                            </span>
+                        </label>
+                        <span class="form-field__error" aria-live="polite"></span>
                     </div>
 
                     <div class="termin-step__actions">

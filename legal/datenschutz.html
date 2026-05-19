@@ -12,10 +12,9 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
-    <link rel="stylesheet" href="../assets/css/main.css?v=5">
+    <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/inter-latin.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="../assets/fonts/fraunces-latin.woff2" crossorigin>
+    <link rel="stylesheet" href="../assets/css/main.css?v=7">
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
@@ -132,13 +131,13 @@
             <ul>
                 <li>Name (Pflichtfeld)</li>
                 <li>E-Mail-Adresse (Pflichtfeld)</li>
-                <li>Telefonnummer (optional)</li>
+                <li>Unternehmen (optional)</li>
                 <li>Inhalt der Nachricht (Pflichtfeld)</li>
                 <li>Bestätigung der Datenschutzerklärung (Pflichtfeld)</li>
             </ul>
             <p>Zum Zeitpunkt der Absendung der Nachricht werden zudem folgende Daten gespeichert:</p>
             <ul>
-                <li>IP-Adresse des Nutzers</li>
+                <li>IP-Adresse des Nutzers (zur Spam-Abwehr / Rate-Limiting)</li>
                 <li>Datum und Uhrzeit der Absendung</li>
             </ul>
             <p>Alternativ ist eine Kontaktaufnahme über die bereitgestellte E-Mail-Adresse möglich. In diesem Fall werden die mit der E-Mail übermittelten personenbezogenen Daten gespeichert.</p>
@@ -162,15 +161,56 @@
             <h3>Widerrufsmöglichkeit</h3>
             <p>Sie können Ihre Einwilligung zur Verarbeitung der personenbezogenen Daten jederzeit widerrufen. Eine formlose Mitteilung per E-Mail an <a href="mailto:kontakt@glanzdesign.eu">kontakt@glanzdesign.eu</a> genügt. Im Fall des Widerrufs wird Ihre Anfrage nicht weiter bearbeitet, und alle damit zusammenhängenden personenbezogenen Daten werden gelöscht – soweit dem keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
 
-            <h2>7. Cookies</h2>
+            <h2>7. Terminbuchung (Online-Erstgespräch)</h2>
+
+            <h3>Beschreibung und Umfang der Datenverarbeitung</h3>
+            <p>Auf unserer Website kann über das Formular „Termin vereinbaren" ein kostenloses telefonisches Erstgespräch gebucht werden. Folgende Daten werden dabei erhoben:</p>
+            <ul>
+                <li>Name (Pflichtfeld)</li>
+                <li>E-Mail-Adresse (Pflichtfeld)</li>
+                <li>Telefonnummer (Pflichtfeld – zur Durchführung des Rückrufs)</li>
+                <li>Gewünschtes Datum und Uhrzeit (Pflichtfeld)</li>
+                <li>Kurzbeschreibung des Anliegens (optional)</li>
+                <li>Bestätigung der Datenschutzerklärung (Pflichtfeld)</li>
+            </ul>
+            <p>Zusätzlich werden – wie beim Kontaktformular – IP-Adresse, Datum und Uhrzeit der Absendung zur Spam-Abwehr gespeichert.</p>
+
+            <h3>Zweck</h3>
+            <p>Die Verarbeitung dient ausschließlich der Terminkoordination, der telefonischen Kontaktaufnahme zur gewünschten Zeit sowie der ggf. anschließenden Vertragsanbahnung.</p>
+
+            <h3>Rechtsgrundlage</h3>
+            <ul>
+                <li><strong>Art. 6 Abs. 1 lit. a DSGVO</strong> (Einwilligung durch Bestätigung der Datenschutzerklärung)</li>
+                <li><strong>Art. 6 Abs. 1 lit. b DSGVO</strong> (Durchführung vorvertraglicher Maßnahmen)</li>
+            </ul>
+
+            <h3>Speicherdauer und Widerruf</h3>
+            <p>Es gelten dieselben Speicherfristen und Widerrufsregeln wie unter Ziffer 6 beschrieben. Nach Abschluss des Erstgesprächs ohne weitere Vertragsanbahnung werden die Daten spätestens nach 6 Monaten gelöscht.</p>
+
+            <h2>8. Versand von E-Mails (SMTP)</h2>
+            <p>Anfragen aus dem Kontakt- und Terminformular werden über den verschlüsselten SMTP-Server unseres Hosting-Anbieters (Hostinger) versendet, an dasselbe Postfach <a href="mailto:kontakt@glanzdesign.eu">kontakt@glanzdesign.eu</a>. Die Übertragung erfolgt TLS-verschlüsselt. Eine Weitergabe an Dritte findet nicht statt; es handelt sich um eine Auftragsverarbeitung gemäß Art. 28 DSGVO im Rahmen des bestehenden Hostingvertrags (siehe Ziffer 5).</p>
+            <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Beantwortung der Anfrage) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an gesicherter, technisch zuverlässiger Zustellung).</p>
+
+            <h2>9. Spam-Schutz (Honeypot &amp; Rate-Limiting)</h2>
+            <p>Zum Schutz vor automatisierten Spam-Anfragen setzen wir zwei serverseitige Maßnahmen ein:</p>
+            <ul>
+                <li>Ein für menschliche Nutzer unsichtbares Eingabefeld („Honeypot"), das nur von Bots ausgefüllt wird. Eingaben in dieses Feld führen zur Verwerfung der Anfrage; es findet <strong>keine</strong> Speicherung statt.</li>
+                <li>Ein einfaches IP-basiertes Rate-Limit (max. 5 Anfragen pro IP-Adresse pro Stunde). Hierfür wird die IP-Adresse anonymisiert (gehasht) für maximal eine Stunde gespeichert und anschließend automatisch verworfen.</li>
+            </ul>
+            <p><strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Abwehr missbräuchlicher Nutzung).</p>
+
+            <h2>10. Schriftarten (selbst gehostet)</h2>
+            <p>Diese Website nutzt die Schriftarten „Inter" und „Fraunces". Die Schriftdateien werden ausschließlich von unserem eigenen Server geladen. Es findet <strong>keine</strong> Verbindung zu Google Fonts oder anderen externen Anbietern statt; insbesondere wird Ihre IP-Adresse nicht an Drittanbieter übertragen.</p>
+
+            <h2>11. Cookies</h2>
             <p>Diese Website verwendet ausschließlich technisch notwendige Cookies, die für den Betrieb der Website erforderlich sind. Diese Cookies enthalten keine personenbezogenen Daten und werden nicht für Tracking- oder Analysezwecke eingesetzt.</p>
             <p><strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TTDSG (Speicherung unbedingt erforderlicher Cookies); ergänzend Art. 6 Abs. 1 lit. f DSGVO.</p>
             <p>Sollten zukünftig weitere Cookies eingesetzt werden, wird diese Datenschutzerklärung entsprechend ergänzt und – wo erforderlich – ein Cookie-Consent-Banner mit Einwilligungsmöglichkeit bereitgestellt.</p>
 
-            <h2>8. SSL-/TLS-Verschlüsselung</h2>
+            <h2>12. SSL-/TLS-Verschlüsselung</h2>
             <p>Diese Website nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte (z. B. Anfragen über das Kontaktformular) eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt und am Schloss-Symbol in Ihrer Browserzeile.</p>
 
-            <h2>9. Rechte der betroffenen Person</h2>
+            <h2>13. Rechte der betroffenen Person</h2>
             <p>Werden personenbezogene Daten von Ihnen verarbeitet, sind Sie Betroffener im Sinne der DSGVO und Ihnen stehen folgende Rechte gegenüber dem Verantwortlichen zu:</p>
             <ul>
                 <li><strong>Auskunftsrecht</strong> (Art. 15 DSGVO)</li>
@@ -196,14 +236,14 @@
                 Web: <a href="https://www.ldi.nrw.de" rel="noopener" target="_blank">https://www.ldi.nrw.de</a>
             </p>
 
-            <h2>10. Keine automatisierte Entscheidungsfindung</h2>
+            <h2>14. Keine automatisierte Entscheidungsfindung</h2>
             <p>Es findet keine automatisierte Entscheidungsfindung im Sinne von Art. 22 DSGVO – einschließlich Profiling – statt.</p>
 
-            <h2>11. Aktualität und Änderung dieser Datenschutzerklärung</h2>
-            <p>Diese Datenschutzerklärung ist aktuell gültig und hat den Stand vom 1. Mai 2026.</p>
+            <h2>15. Aktualität und Änderung dieser Datenschutzerklärung</h2>
+            <p>Diese Datenschutzerklärung ist aktuell gültig und hat den Stand vom 19. Mai 2026.</p>
             <p>Durch die Weiterentwicklung unserer Website oder aufgrund geänderter gesetzlicher beziehungsweise behördlicher Vorgaben kann es notwendig werden, diese Datenschutzerklärung zu ändern. Die jeweils aktuelle Datenschutzerklärung kann jederzeit auf dieser Seite abgerufen werden.</p>
 
-            <p class="legal-page__meta"><strong>Stand:</strong> 1. Mai 2026</p>
+            <p class="legal-page__meta"><strong>Stand:</strong> 19. Mai 2026</p>
 
             <div class="legal-page__back">
                 <a href="../index.html">
