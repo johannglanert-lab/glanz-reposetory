@@ -122,7 +122,7 @@
   /* MODULE 3: COUNT-UP ANIMATION                                       */
   /* ────────────────────────────────────────────────────────────────── */
 
-  function animateCountUp(el, duration) {
+  function animateCountUp(el, duration, easing) {
     const target = parseInt(el.dataset.target, 10);
     const suffix = el.dataset.suffix || '';
     const start = performance.now();
@@ -131,10 +131,14 @@
     function step(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+      // Easing-Funktion wird von außen reingereicht. Auf Mobile nutzen wir
+      // easeOutQuad (1-(1-p)^2) statt easeOutCubic — quad verteilt die
+      // letzten Increments gleichmäßiger, sodass kleine Targets (20, 48)
+      // im Endbereich nicht sichtbar "ticken". Desktop bleibt bei cubic.
+      const eased = easing(progress);
       const current = Math.round(eased * target);
       // Nur schreiben, wenn der Wert sich tatsächlich geändert hat.
-      // Spart Reflow-Frames, besonders bei kleinen Targets (z.B. 20, 48).
+      // Spart Reflow-Frames, besonders bei kleinen Targets.
       if (current !== lastValue) {
         el.textContent = current + suffix;
         lastValue = current;
@@ -142,6 +146,13 @@
 
       if (progress < 1) {
         requestAnimationFrame(step);
+      } else {
+        // Sicherheits-Netz: am Ende exakt den Zielwert setzen — Math.round
+        // landet bei progress=1 zwar bereits dort, aber explizit ist
+        // explizit, falls die rAF-Loop einen Frame früher abbricht.
+        if (lastValue !== target) {
+          el.textContent = target + suffix;
+        }
       }
     }
 
@@ -159,27 +170,33 @@
       return;
     }
 
-    // Mobile: kürzere Count-Up-Dauer (1200ms vs 1800ms) und früherer
-    // Trigger, damit die Zahlen schon "laufen", wenn der Nutzer die
-    // Stats-Bar erreicht — fühlt sich auf kleinen Screens deutlich
-    // flüssiger an als das langsame, spätstartende Desktop-Tempo.
+    // Mobile: leicht kürzere Count-Up-Dauer (1100ms vs 1800ms), früherer
+    // Trigger und FLACHERE Easing-Kurve (easeOutQuad statt easeOutCubic).
+    // Cubic verteilt 80% des Counts auf die ersten 50% Zeit — bei kleinen
+    // Targets wie 20 oder 48 entstehen am Ende sichtbare Ticks mit
+    // 100-150ms Abstand zwischen Werten, die auf dem Handy klar als
+    // "abgehakt" wahrgenommen werden. easeOutQuad ist gleichmäßiger und
+    // landet trotzdem noch sanft beim Endwert.
     const isMobile = window.matchMedia('(max-width: 640px)').matches;
-    const duration = isMobile ? 1200 : 1800;
+    const duration = isMobile ? 1100 : 1800;
+    const easing = isMobile
+      ? function easeOutQuad(p) { return 1 - (1 - p) * (1 - p); }
+      : function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); };
 
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             statsSection.querySelectorAll('[data-count-up]').forEach(el => {
-              animateCountUp(el, duration);
+              animateCountUp(el, duration, easing);
             });
             observer.unobserve(statsSection);
           }
         });
       },
       {
-        threshold: isMobile ? 0.15 : 0.3,
-        rootMargin: isMobile ? '0px 0px 12% 0px' : '0px'
+        threshold: isMobile ? 0.1 : 0.3,
+        rootMargin: isMobile ? '0px 0px 20% 0px' : '0px'
       }
     );
 

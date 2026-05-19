@@ -647,30 +647,55 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 
 /* Hamburger-Icons als Inline-SVG (Lucide-Stil): garantiert pixelgenaues,
    gleichmäßiges Rendering der drei Linien bzw. des X auf allen Geräten.
-   Menu-Icon und Close-Icon liegen beide im Button — eines ist je nach
-   aria-expanded-State ausgeblendet. */
+   Menu- und Close-Icon liegen beide gleichzeitig im Button; sie werden
+   gestapelt (position: absolute auf Close) und per opacity/transform
+   crossfaded, statt per display: none/block hart umzuschalten. Das fühlt
+   sich beim Antippen deutlich flüssiger an. */
+.site-header__hamburger {
+  position: relative;
+}
+
 .site-header__hamburger-icon {
   display: block;
   color: var(--text-primary);
-  transition: opacity var(--transition-fast);
+  transition:
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-header__hamburger-icon--menu {
+  opacity: 1;
+  transform: rotate(0deg);
 }
 
 .site-header__hamburger-icon--close {
-  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -16px;
+  margin-left: -16px;
+  opacity: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
 }
 
 .site-header__hamburger[aria-expanded="true"] .site-header__hamburger-icon--menu {
-  display: none;
+  opacity: 0;
+  transform: rotate(90deg);
 }
 
 .site-header__hamburger[aria-expanded="true"] .site-header__hamburger-icon--close {
-  display: block;
+  opacity: 1;
+  transform: rotate(0deg);
 }
 
 /* Mobile-Nav als Vollbild-Overlay (unterhalb des Headers).
    Wenn der User auf das Menü-Symbol klickt, deckt das Overlay die komplette
    restliche Viewport-Fläche ab — er sieht nur noch Über uns / Leistungen /
-   Projekte / Kontakt + CTA. Design bewusst minimal gehalten. */
+   Projekte / Kontakt + CTA. Design bewusst minimal gehalten.
+   Motion: Sanfter Slide-Down vom Header herab (translateY -10px → 0) + Fade.
+   visibility wird beim Schließen verzögert, damit die Fade-Out-Phase
+   nicht hart "weggeknipst" wird. */
 .mobile-nav {
   position: fixed;
   top: var(--header-height);
@@ -681,7 +706,12 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   padding: var(--space-8) var(--space-6);
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--transition-base), visibility var(--transition-base);
+  transform: translate3d(0, -10px, 0);
+  will-change: opacity, transform;
+  transition:
+    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 260ms;
   z-index: 50;
   overflow-y: auto;
 }
@@ -689,6 +719,11 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 .mobile-nav--open {
   opacity: 1;
   visibility: visible;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
 }
 
 .mobile-nav__list {
@@ -716,6 +751,35 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   margin-top: var(--space-8);
   font-size: var(--text-lg);
 }
+
+/* Links und CTA starten leicht abgesenkt + transparent und ziehen
+   gestaffelt nach. Stagger fühlt sich "lebendig" an, ohne zappelig
+   zu wirken. Jeder Link wird durch nth-child verzögert. Die transform-
+   und opacity-Übergänge laufen GPU-compositiert, die Link-Färbung
+   bleibt instant beim Hover (color var(--transition-fast) unverändert). */
+.mobile-nav__link,
+.mobile-nav__cta {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.mobile-nav--open .mobile-nav__link,
+.mobile-nav--open .mobile-nav__cta {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.mobile-nav--open .mobile-nav__list li:nth-child(1) .mobile-nav__link { transition-delay:  80ms,  80ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(2) .mobile-nav__link { transition-delay: 130ms, 130ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(3) .mobile-nav__link { transition-delay: 180ms, 180ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(4) .mobile-nav__link { transition-delay: 220ms, 220ms, 0s, 0s, 0s; }
+.mobile-nav--open .mobile-nav__list li:nth-child(5) .mobile-nav__cta  { transition-delay: 280ms, 280ms, 0s, 0s, 0s; }
 
 @media (min-width: 901px) {
   .site-header__nav { display: flex; }
@@ -1881,41 +1945,13 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 .project-card__image {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
+  background: #f2f2f2;
   transition: transform var(--transition-slow);
 }
 
 .project-card:hover .project-card__image {
   transform: scale(1.04);
-}
-
-.project-card__placeholder {
-  position: relative;
-  z-index: 2;
-  font-size: var(--text-sm);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--tracking-wide);
-  color: rgba(255, 255, 255, 0.95);
-  text-transform: uppercase;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.20);
-  padding: var(--space-2) var(--space-4);
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: var(--radius-full);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.project-card__image::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(90deg, transparent, transparent 22px, rgba(255,255,255,0.08) 22px, rgba(255,255,255,0.08) 23px),
-    repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(255,255,255,0.08) 22px, rgba(255,255,255,0.08) 23px);
-  z-index: 1;
 }
 
 .project-card__image img {
@@ -1925,27 +1961,6 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   height: 100%;
   object-fit: cover;
   display: block;
-  z-index: 2;
-}
-
-.project-card__image:has(img)::before {
-  display: none;
-}
-
-.project-card__image--restaurant {
-  background: linear-gradient(135deg, #FF6B6B 0%, #C44569 100%);
-}
-
-.project-card__image--medical {
-  background: linear-gradient(135deg, #4ECDC4 0%, #1A8E84 100%);
-}
-
-.project-card__image--craft {
-  background: linear-gradient(135deg, #C9A96E 0%, #7A5A1F 100%);
-}
-
-.project-card__image--service {
-  background: linear-gradient(135deg, var(--color-blue) 0%, var(--color-purple) 100%);
 }
 
 .project-card__body {
@@ -2839,20 +2854,26 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   /* Strikt mobile-only — Desktop/Tablet ≥641px bleiben unverändert.    */
   /* ─────────────────────────────────────────────────────────────────── */
 
-  /* Reveal-Tuning: kürzere Reise (14px statt 28px), kürzere Dauer
-     (420ms statt 600ms), näher gestaffelte Delays. So sind Elemente
-     schnell genug "da", bevor der Daumen weitergeflickt hat. */
+  /* Reveal-Tuning: kürzere Reise (12px statt 28px), kürzere Dauer
+     (380ms statt 600ms), näher gestaffelte Delays. So sind Elemente
+     schnell genug "da", bevor der Daumen weitergeflickt hat.
+     will-change + backface-visibility erzwingen einen GPU-Compositor-
+     Layer BEVOR die Animation triggert — sonst muss der Browser im
+     ersten Frame promoten und das ruckelt sichtbar. */
   .reveal {
-    transform: translate3d(0, 14px, 0);
-    transition: opacity 420ms cubic-bezier(0.22, 1, 0.36, 1),
-                transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translate3d(0, 12px, 0);
+    transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 380ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .reveal--visible {
     transform: translate3d(0, 0, 0);
   }
-  .reveal--delay-1 { transition-delay:  60ms; }
-  .reveal--delay-2 { transition-delay: 120ms; }
-  .reveal--delay-3 { transition-delay: 180ms; }
+  .reveal--delay-1 { transition-delay:  50ms; }
+  .reveal--delay-2 { transition-delay: 100ms; }
+  .reveal--delay-3 { transition-delay: 150ms; }
 
   /* Tap-Highlight entfernen (sonst flackert iOS/Android beim Antippen
      ein graues/blaues Rechteck — fühlt sich "abgehakt" an). */
