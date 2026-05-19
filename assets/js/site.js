@@ -377,8 +377,22 @@
         if (!validateField(input)) valid = false;
       });
 
+      const consent = form.querySelector('#f-consent');
+      const consentWrap = consent ? consent.closest('.form-field--consent') : null;
+      if (consent && consentWrap) {
+        const errorEl = consentWrap.querySelector('.form-field__error');
+        if (!consent.checked) {
+          consentWrap.classList.add('form-field--invalid');
+          if (errorEl) errorEl.textContent = 'Bitte stimmen Sie der Datenschutzerklärung zu.';
+          valid = false;
+        } else {
+          consentWrap.classList.remove('form-field--invalid');
+          if (errorEl) errorEl.textContent = '';
+        }
+      }
+
       if (!valid) {
-        const firstInvalid = form.querySelector('.form-field__input--invalid');
+        const firstInvalid = form.querySelector('.form-field__input--invalid, .form-field--invalid .form-consent__checkbox');
         if (firstInvalid) firstInvalid.focus();
         return;
       }

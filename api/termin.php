@@ -20,6 +20,7 @@ $phone   = glanz_clean((string) ($_POST['phone']   ?? ''), 100);
 $message = glanz_clean((string) ($_POST['message'] ?? ''), 4000);
 $date    = glanz_clean((string) ($_POST['date']    ?? ''), 100);
 $time    = glanz_clean((string) ($_POST['time']    ?? ''), 50);
+$consent = (string) ($_POST['consent'] ?? '');
 
 if ($name === '' || $email === '' || $phone === '' || $date === '' || $time === '') {
     glanz_json_response(400, [
@@ -31,6 +32,12 @@ if (!glanz_is_valid_email($email)) {
     glanz_json_response(400, [
         'ok'    => false,
         'error' => 'Bitte eine gültige E-Mail-Adresse angeben.',
+    ]);
+}
+if ($consent !== '1') {
+    glanz_json_response(400, [
+        'ok'    => false,
+        'error' => 'Bitte stimmen Sie der Datenschutzerklärung zu, um die Anfrage zu senden.',
     ]);
 }
 

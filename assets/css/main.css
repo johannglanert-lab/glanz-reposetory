@@ -2419,6 +2419,48 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   min-height: 1.2em;
 }
 
+/* Datenschutz-Checkbox */
+.form-field--consent {
+  margin-top: var(--space-3);
+}
+
+.form-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.form-consent__checkbox {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-blue);
+  cursor: pointer;
+}
+
+.form-consent__text a {
+  color: var(--color-blue);
+  text-decoration: underline;
+}
+
+.form-consent__text a:hover {
+  color: var(--color-blue-600);
+}
+
+.form-field--consent.form-field--invalid .form-consent {
+  color: #DC2626;
+}
+
+.form-field--consent.form-field--invalid .form-consent__checkbox {
+  outline: 2px solid #DC2626;
+  outline-offset: 2px;
+}
+
 .contact-form__submit {
   width: 100%;
   margin-top: var(--space-2);
