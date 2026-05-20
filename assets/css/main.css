@@ -591,20 +591,14 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   display: block;
 }
 
-/* Header-Logo: einfarbig Dunkelblau (Brand --color-blue-600), kein Verlauf, kein Lila.
-   Wir nutzen das PNG als Maske; die sichtbare Farbe kommt aus background-color.
-   Footer bleibt unverändert (anderer Container, .site-footer). */
+/* Header: GD-Logo-Bild komplett ausgeblendet, nur Schriftzug "GlanzDesign" sichtbar.
+   Footer (.site-footer .site-header__logo-mark) bleibt absichtlich unverändert. */
 .site-header .site-header__logo-mark {
-  background-color: var(--color-blue-600);
-  -webkit-mask: url('../images/logo.png') no-repeat center / contain;
-          mask: url('../images/logo.png') no-repeat center / contain;
-}
-.site-header .site-header__logo-mark img {
-  visibility: hidden;
+  display: none;
 }
 
 .site-header__logo-text {
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   font-weight: var(--fw-medium);
   color: var(--text-primary);
   letter-spacing: var(--tracking-snug);
