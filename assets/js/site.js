@@ -15,6 +15,22 @@
       return;
     }
 
+    // Preloader nur beim Erstaufruf pro Browser-Session zeigen.
+    // Folge-Navigation (Leistungen, Projekte, Termin) springt direkt zum Inhalt.
+    let hasSeenPreloader = false;
+    try {
+      hasSeenPreloader = sessionStorage.getItem('glanz-preloader-shown') === '1';
+    } catch (_) { /* sessionStorage blockiert (Privacy-Mode) → wie Erstaufruf behandeln */ }
+
+    if (hasSeenPreloader) {
+      preloader.parentNode && preloader.parentNode.removeChild(preloader);
+      body.classList.remove('is-loading');
+      body.classList.add('is-loaded');
+      return;
+    }
+
+    try { sessionStorage.setItem('glanz-preloader-shown', '1'); } catch (_) {}
+
     const MIN_DURATION_MS = 2200;
     const FADE_OUT_MS = 900;
     const startTime = performance.now();

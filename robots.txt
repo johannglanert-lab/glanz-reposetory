@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /termin.html
+Disallow: /api/
+
+Sitemap: https://glanzdesign.eu/sitemap.xml
