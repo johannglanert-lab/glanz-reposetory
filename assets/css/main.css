@@ -591,9 +591,16 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   display: block;
 }
 
-/* Header-Logo: gleiche Dunkelblau-Wirkung wie im Footer (Footer ohne Filter) */
+/* Header-Logo: einfarbig Dunkelblau (Brand --color-blue-600), kein Verlauf, kein Lila.
+   Wir nutzen das PNG als Maske; die sichtbare Farbe kommt aus background-color.
+   Footer bleibt unverändert (anderer Container, .site-footer). */
+.site-header .site-header__logo-mark {
+  background-color: var(--color-blue-600);
+  -webkit-mask: url('../images/logo.png') no-repeat center / contain;
+          mask: url('../images/logo.png') no-repeat center / contain;
+}
 .site-header .site-header__logo-mark img {
-  filter: brightness(0.45) saturate(0.85) hue-rotate(-28deg) contrast(1.1);
+  visibility: hidden;
 }
 
 .site-header__logo-text {
