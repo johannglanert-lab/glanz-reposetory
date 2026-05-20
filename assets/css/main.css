@@ -593,7 +593,7 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 
 /* Header-Logo: gleiche Dunkelblau-Wirkung wie im Footer (Footer ohne Filter) */
 .site-header .site-header__logo-mark img {
-  filter: brightness(0.55) saturate(0.95) hue-rotate(-18deg);
+  filter: brightness(0.45) saturate(0.85) hue-rotate(-28deg) contrast(1.1);
 }
 
 .site-header__logo-text {
