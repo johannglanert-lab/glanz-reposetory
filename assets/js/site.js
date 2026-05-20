@@ -369,6 +369,20 @@
       });
     });
 
+    const consentBox = form.querySelector('#f-consent');
+    if (consentBox) {
+      consentBox.addEventListener('change', () => {
+        if (consentBox.checked) {
+          const wrap = consentBox.closest('.form-field--consent');
+          if (wrap) {
+            wrap.classList.remove('form-field--invalid');
+            const errorEl = wrap.querySelector('.form-field__error');
+            if (errorEl) errorEl.textContent = '';
+          }
+        }
+      });
+    }
+
     form.addEventListener('submit', async e => {
       e.preventDefault();
 
@@ -383,7 +397,7 @@
         const errorEl = consentWrap.querySelector('.form-field__error');
         if (!consent.checked) {
           consentWrap.classList.add('form-field--invalid');
-          if (errorEl) errorEl.textContent = 'Bitte stimmen Sie der Datenschutzerklärung zu.';
+          if (errorEl) errorEl.innerHTML = 'Bitte stimmen Sie der <a href="legal/datenschutz.html" target="_blank" rel="noopener" class="form-field__error-link">Datenschutzerklärung</a> zu.';
           valid = false;
         } else {
           consentWrap.classList.remove('form-field--invalid');

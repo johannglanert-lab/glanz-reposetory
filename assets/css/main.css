@@ -1274,6 +1274,10 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
     padding: var(--space-5) var(--space-10);
     font-size: var(--text-xl);
   }
+  /* Pfeil-Icon im Hero-CTA auf Mobile ausblenden (Desktop unverändert) */
+  .hero__actions .btn--primary > svg {
+    display: none;
+  }
   /* Stats-Bar oben enger an den Hero-Content rücken */
   .stats-bar {
     padding-block: var(--space-8);
@@ -2419,6 +2423,15 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   min-height: 1.2em;
 }
 
+.form-field__error-link {
+  color: var(--color-blue);
+  text-decoration: underline;
+}
+
+.form-field__error-link:hover {
+  color: var(--color-blue-600);
+}
+
 /* Datenschutz-Checkbox */
 .form-field--consent {
   margin-top: var(--space-3);
@@ -2439,8 +2452,40 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  accent-color: var(--color-blue);
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-color, #CBD5E1);
+  border-radius: 4px;
+  position: relative;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.form-consent__checkbox:hover {
+  border-color: var(--color-blue);
+}
+
+.form-consent__checkbox:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+.form-consent__checkbox:checked {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+}
+
+.form-consent__checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 5px;
+  height: 10px;
+  border: solid #FFFFFF;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .form-consent__text a {
@@ -2452,13 +2497,13 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   color: var(--color-blue-600);
 }
 
-.form-field--consent.form-field--invalid .form-consent {
-  color: #DC2626;
+.form-field--consent.form-field--invalid .form-consent__checkbox:not(:checked) {
+  border-color: #DC2626;
+  background-color: #FEF2F2;
 }
 
-.form-field--consent.form-field--invalid .form-consent__checkbox {
-  outline: 2px solid #DC2626;
-  outline-offset: 2px;
+.form-field--consent.form-field--invalid:has(.form-consent__checkbox:not(:checked)) .form-consent {
+  color: #DC2626;
 }
 
 .contact-form__submit {
