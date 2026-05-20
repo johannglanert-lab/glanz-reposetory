@@ -2479,13 +2479,13 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
 .form-consent__checkbox:checked::after {
   content: "";
   position: absolute;
-  left: 4px;
-  top: 0;
+  left: 50%;
+  top: 50%;
   width: 5px;
   height: 10px;
   border: solid #FFFFFF;
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  transform: translate(-50%, -60%) rotate(45deg);
 }
 
 .form-consent__text a {
