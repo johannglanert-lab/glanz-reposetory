@@ -580,6 +580,30 @@
   }
 
   /* ────────────────────────────────────────────────────────────────── */
+  /* MODULE 11: VIEW TRANSITIONS CLEANUP                                */
+  /* Räumt Overlays vor cross-document View-Transitions auf, damit der  */
+  /* Snapshot der alten Seite sauber bleibt (kein offenes Mobile-Menü   */
+  /* im Übergang).                                                      */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  function initViewTransitionCleanup() {
+    if (!('onpageswap' in window)) return; // alte Browser → kein Cross-Doc-VT
+
+    window.addEventListener('pageswap', () => {
+      const mobileNav = document.getElementById('mobile-nav');
+      const hamburger = document.querySelector('.site-header__hamburger');
+      if (mobileNav && mobileNav.classList.contains('mobile-nav--open')) {
+        mobileNav.classList.remove('mobile-nav--open');
+        mobileNav.setAttribute('aria-hidden', 'true');
+        if (hamburger) {
+          hamburger.setAttribute('aria-expanded', 'false');
+          hamburger.setAttribute('aria-label', 'Menü öffnen');
+        }
+      }
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
   /* INIT                                                               */
   /* ────────────────────────────────────────────────────────────────── */
 
@@ -595,6 +619,7 @@
     initAnchorFocus();
     initHeroTilt();
     initFaq();
+    initViewTransitionCleanup();
   }
 
   if (document.readyState === 'loading') {

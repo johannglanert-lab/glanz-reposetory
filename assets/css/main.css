@@ -367,6 +367,94 @@ body.is-loaded .hero__visual    { animation-delay: 160ms; }
   }
 }
 
+/* Preloader-Skip bei interner Navigation zur Index
+   (gesetzt vom Inline-Skript im <head>, wenn sessionStorage 'glanz-preloader-shown' = '1').
+   Verhindert den is-loading-Flash, damit der View-Transition-Snapshot der neuen Seite
+   sofort sichtbaren Content zeigt. */
+html.preloader-skip body.is-loading {
+  overflow: visible;
+}
+html.preloader-skip body.is-loading > main,
+html.preloader-skip body.is-loading > .site-header {
+  opacity: 1;
+}
+html.preloader-skip .preloader {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════ */
+/* MODULE: VIEW TRANSITIONS (Cross-Document, MPA)                          */
+/* Native Browser-API für app-artige Seitenübergänge.                      */
+/* Unterstützt: Chrome/Edge 126+, Safari 18.2+. Firefox/ältere: silent     */
+/* Fallback (kein Transition, kein Bruch).                                 */
+/* ═══════════════════════════════════════════════════════════════════════ */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* Root-Übergang: subtiler Crossfade, schnell genug für Premium-Wirkung,
+   langsam genug um wahrgenommen zu werden. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: vt-fade-out;
+}
+::view-transition-new(root) {
+  animation-name: vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  to   { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
+/* Persistente Identitäten: Header, Logo, Primary-CTA und Footer
+   bekommen ihre eigenen Transitionen. Da sie auf allen Seiten identisch
+   positioniert sind, „bleiben" sie visuell stehen statt zu crossfaden –
+   das erzeugt das App-Gefühl. */
+.site-header        { view-transition-name: vt-header; }
+.site-header__logo  { view-transition-name: vt-logo; }
+.site-footer        { view-transition-name: vt-footer; }
+
+/* Header-CTA (nur im Header-Action-Slot, nicht auf der Mobile-Nav-Variante,
+   damit es keine Doppel-Identität gibt). */
+.site-header__actions .btn--primary { view-transition-name: vt-cta-primary; }
+
+/* Identitäten leicht eingeblendet halten (kein Springen, falls Größen
+   minimal differieren zwischen Seiten). */
+::view-transition-old(vt-header),
+::view-transition-new(vt-header),
+::view-transition-old(vt-logo),
+::view-transition-new(vt-logo),
+::view-transition-old(vt-cta-primary),
+::view-transition-new(vt-cta-primary),
+::view-transition-old(vt-footer),
+::view-transition-new(vt-footer) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Mobile-Nav-Overlay sollte nicht im Snapshot gefangen werden.
+   Falls beim Klick-Zeitpunkt geöffnet, wird es per JS vor der Navigation
+   geschlossen; zusätzlich: kein view-transition-name → wird mit root
+   gecrossfaded und stört nicht. */
+
+/* Reduced Motion: View Transitions komplett deaktivieren. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────────────── */
 /* LAYOUT UTILITIES                                                        */
 /* ─────────────────────────────────────────────────────────────────────── */
