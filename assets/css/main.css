@@ -54,7 +54,7 @@
   --bg-subtle:            var(--color-grey-50);
   --text-primary:         var(--color-grey-900);
   --text-secondary:       var(--color-grey-600);
-  --text-muted:           var(--color-grey-500);
+  --text-muted:           #5C6470; /* WCAG AA-sicher (~5.6:1 auf bg-page), bewusst dunkler als grey-500 */
   --text-inverse:         var(--color-white);
   --border-color:         var(--color-grey-200);
   --border-strong:        var(--color-grey-300);
