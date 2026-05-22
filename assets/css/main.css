@@ -3948,6 +3948,222 @@ html.preloader-skip .preloader {
   .stepper__label {
     display: none;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* THEME-TRANSITION (smoother BG-Wechsel pro Sektion)                      */
+/* Inspired by bridge.surf — siehe BRIDGE-SURF-ANALYSE.md                   */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --section-dark-bg:        var(--color-blue-deep); /* #0A1A3A */
+  --section-dark-fg:        #FFFFFF;
+  --section-dark-fg-muted:  rgba(255, 255, 255, 0.72);
+  --section-dark-border:    rgba(255, 255, 255, 0.14);
+  --section-theme-duration: 420ms;
+}
+
+/* Mobile: kürzere Transition — fühlt sich snappier an auf kleinem Screen */
+@media (max-width: 767px) {
+  :root {
+    --section-theme-duration: 300ms;
+  }
+}
+
+/* Theme-Target startet transparent (über Body-Hintergrund) und kann auf dunkel kippen */
+[data-theme-target="dark"] {
+  background-color: transparent;
+  transition: background-color var(--section-theme-duration) ease;
+}
+
+/* Body-Scope ist im Dark-Mode → das Target wird dunkel */
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] {
+  background-color: var(--section-dark-bg);
+}
+
+/* Inhalte in der Dark-Sektion adaptieren sich smooth mit */
+[data-theme-target="dark"] .section__title,
+[data-theme-target="dark"] .process-card__title,
+[data-theme-target="dark"] .process-card__meta-value {
+  transition: color var(--section-theme-duration) ease;
+}
+
+[data-theme-target="dark"] .section__subtitle,
+[data-theme-target="dark"] .process-card__text,
+[data-theme-target="dark"] .process-card__meta-label {
+  transition: color var(--section-theme-duration) ease;
+}
+
+[data-theme-target="dark"] .process-card,
+[data-theme-target="dark"] .process-card__meta {
+  transition:
+    background-color var(--section-theme-duration) ease,
+    border-color var(--section-theme-duration) ease,
+    color var(--section-theme-duration) ease;
+}
+
+[data-theme-target="dark"] .process-card__icon,
+[data-theme-target="dark"] .section__eyebrow {
+  transition:
+    background-color var(--section-theme-duration) ease,
+    color var(--section-theme-duration) ease;
+}
+
+/* DARK-State: alle Text- und Card-Farben invertiert */
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .section__title,
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__title,
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__meta-value {
+  color: var(--section-dark-fg);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .section__subtitle,
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__text,
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__meta-label {
+  color: var(--section-dark-fg-muted);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--section-dark-border);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(45, 127, 249, 0.40);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__meta {
+  border-top-color: var(--section-dark-border);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__icon {
+  background: rgba(45, 127, 249, 0.15);
+  color: var(--color-blue-400);
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .process-card__number {
+  color: rgba(124, 58, 237, 0.30); /* Lila statt blue-50 — sichtbar auf dunkel */
+}
+
+[data-theme-scope][data-theme-mode="dark"] [data-theme-target="dark"] .section__eyebrow {
+  background: rgba(45, 127, 249, 0.16);
+  color: var(--color-blue-400);
+}
+
+/* Reduced motion respektieren */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme-target="dark"],
+  [data-theme-target="dark"] * {
+    transition: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* INSET-ROUNDED-PANEL für Kontakt-Sektion (schwebende Karte)              */
+/* ─────────────────────────────────────────────────────────────────────── */
+
+/* Sektion selbst trägt nur die Viewport-Inset-Abstände, kein eigenes Padding */
+.section.contact {
+  padding-block: var(--space-12);
+  padding-inline: 16px;
+}
+
+@media (min-width: 768px) {
+  .section.contact {
+    padding-inline: 24px;
+    padding-block: var(--space-16);
+  }
+}
+
+/* Der innere Shell wird zum Panel */
+.section.contact > .shell.contact__inner {
+  background: var(--color-blue-deep);
+  border-radius: 24px;
+  padding: clamp(var(--space-10), 8vw, var(--space-12)) clamp(var(--space-5), 5vw, var(--space-8));
+  box-shadow:
+    0 20px 60px rgba(10, 26, 58, 0.28),
+    0 4px 16px rgba(10, 26, 58, 0.16);
+  overflow: hidden;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .section.contact > .shell.contact__inner {
+    border-radius: 32px;
+    padding: clamp(var(--space-12), 4vw, var(--space-20)) clamp(var(--space-8), 4vw, var(--space-16));
+  }
+}
+
+/* Subtle Akzent: gradient-Streifen oben links als Premium-Detail */
+.section.contact > .shell.contact__inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(45, 127, 249, 0.0) 0%,
+    rgba(45, 127, 249, 0.5) 30%,
+    rgba(124, 58, 237, 0.4) 70%,
+    rgba(124, 58, 237, 0.0) 100%);
+}
+
+/* Text-Anpassungen innerhalb des Panels */
+.section.contact .contact__title {
+  color: var(--color-white);
+}
+
+.section.contact .contact__text {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.section.contact .contact__benefit {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.section.contact .contact__benefit-icon {
+  background: rgba(255, 255, 255, 0.10);
+  color: var(--color-white);
+}
+
+.section.contact .section__eyebrow {
+  background: rgba(45, 127, 249, 0.18);
+  color: var(--color-blue-400);
+}
+
+.section.contact .section__eyebrow::before {
+  background: var(--color-blue-400);
+}
+
+.section.contact .contact__direct {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.section.contact .contact__direct-label {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.section.contact .contact__direct-link {
+  color: var(--color-blue-400);
+}
+
+.section.contact .contact__direct-link:hover {
+  color: #6BA3FF;
+}
+
+/* Form-Karte bleibt weiß — Kontrast zum dunklen Panel */
+.section.contact .contact__form-wrap {
+  /* Erbt bestehende weiße Karte. Schatten verstärken für „schwebt“-Look */
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.30),
+    0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+/* Mobile-Termin-Styles (waren versehentlich aus @media (max-width:640px) ausgebrochen — wieder eingewickelt) */
+@media (max-width: 640px) {
   .calendar__day {
     font-size: var(--text-sm);
   }

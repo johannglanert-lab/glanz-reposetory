@@ -13,6 +13,8 @@
 
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin.woff2" crossorigin>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="apple-touch-icon" href="assets/images/logo.png">
 
     <script>
       // Preloader-Skip: bei interner Folge-Navigation sofort sichtbarer Content,
@@ -118,7 +120,7 @@
     }
     </script>
 </head>
-<body class="is-loading">
+<body class="is-loading" data-theme-scope data-theme-mode="light">
     <div class="preloader" aria-hidden="true">
         <div class="preloader__bg" aria-hidden="true"></div>
         <span class="preloader__brand"><span class="preloader__brand-glanz"><span class="preloader__char">G</span><span class="preloader__char">l</span><span class="preloader__char">a</span><span class="preloader__char">n</span><span class="preloader__char">z</span></span><span class="preloader__brand-design"><span class="preloader__char">D</span><span class="preloader__char">e</span><span class="preloader__char">s</span><span class="preloader__char">i</span><span class="preloader__char">g</span><span class="preloader__char">n</span></span></span>
@@ -131,7 +133,7 @@
         <div class="shell site-header__inner">
             <a href="#hero" class="site-header__logo" aria-label="Glanz Design – Startseite">
                 <span class="site-header__logo-mark" aria-hidden="true">
-                    <img src="assets/images/logo/logo-master.svg" alt="" width="828" height="747" decoding="async">
+                    <img src="assets/images/logo.png" alt="" width="975" height="747" decoding="async">
                 </span>
                 <span class="site-header__logo-text">Glanz<strong>Design</strong></span>
             </a>
@@ -376,7 +378,7 @@
     </section>
 
     <!-- PROCESS -->
-    <section id="prozess" class="section process">
+    <section id="prozess" class="section process" data-theme-target="dark">
         <div class="shell">
             <div class="section__header reveal">
                 <span class="section__eyebrow">Unser Prozess</span>
@@ -952,7 +954,7 @@
             <div class="site-footer__brand">
                 <a href="#hero" class="site-header__logo site-header__logo--footer" aria-label="Glanz Design – Startseite">
                     <span class="site-header__logo-mark" aria-hidden="true">
-                        <img src="assets/images/logo/logo-master.svg" alt="" width="828" height="747" decoding="async">
+                        <img src="assets/images/logo.png" alt="" width="975" height="747" decoding="async">
                     </span>
                     <span class="site-header__logo-text">Glanz<strong>Design</strong></span>
                 </a>
@@ -1005,6 +1007,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/site.js?v=12" defer></script>
+    <script src="assets/js/lenis.min.js?v=1" defer></script>
+    <script src="assets/js/site.js?v=13" defer></script>
 </body>
 </html>

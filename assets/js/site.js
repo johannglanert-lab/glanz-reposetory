@@ -604,10 +604,95 @@
   }
 
   /* ────────────────────────────────────────────────────────────────── */
+  /* MODULE: SMOOTH SCROLL (Lenis)                                      */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  function initSmoothScroll() {
+    // Reduced-Motion: kein Lenis — nativer Scroll bleibt.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Lenis nicht geladen? Silent fail — nativer Scroll funktioniert weiterhin.
+    if (typeof window.Lenis !== 'function') return;
+
+    const lenis = new window.Lenis({
+      lerp: 0.09,
+      wheelMultiplier: 0.9,
+      // syncTouch:false → Touch bleibt nativ (iOS-Momentum, Pull-to-Refresh).
+      // Smoothing nur fürs Wheel/Trackpad.
+      syncTouch: false,
+      smoothWheel: true
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Globaler Hook für andere Module (Theme-Observer subscribed sich hier).
+    window.__glanzLenis = lenis;
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* MODULE: THEME-TRANSITION (Background-Color pro Sektion)            */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  function initThemeTransition() {
+    const scope = document.querySelector('[data-theme-scope]');
+    const darkTargets = document.querySelectorAll('[data-theme-target="dark"]');
+    if (!scope || darkTargets.length === 0) return;
+
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    // Mobile: kleinerer Threshold weil Sektionen oft 100vh hoch sind.
+    const thresholdRatio = isMobile ? 0.30 : 0.45;
+
+    let rafId = 0;
+    let active = true;
+
+    function check() {
+      rafId = 0;
+      if (!active) return;
+      const H = window.innerHeight || document.documentElement.clientHeight;
+      const edge = H * thresholdRatio;
+
+      // Wenn IRGENDEINE dark-target Sektion den mittleren Viewport dominiert → dark.
+      let isDark = false;
+      for (const el of darkTargets) {
+        const r = el.getBoundingClientRect();
+        if (r.top <= H - edge && r.bottom >= edge) {
+          isDark = true;
+          break;
+        }
+      }
+
+      const wanted = isDark ? 'dark' : 'light';
+      if (scope.getAttribute('data-theme-mode') !== wanted) {
+        scope.setAttribute('data-theme-mode', wanted);
+      }
+    }
+
+    function schedule() {
+      if (rafId === 0) rafId = requestAnimationFrame(check);
+    }
+
+    // Auf Lenis subscriben wenn vorhanden, sonst nativer Scroll.
+    if (window.__glanzLenis && typeof window.__glanzLenis.on === 'function') {
+      window.__glanzLenis.on('scroll', schedule);
+    }
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('orientationchange', schedule);
+
+    // Initial-Check.
+    check();
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
   /* INIT                                                               */
   /* ────────────────────────────────────────────────────────────────── */
 
   function init() {
+    initSmoothScroll();
     initPreloader();
     initNav();
     initHeaderScroll();
@@ -620,6 +705,7 @@
     initHeroTilt();
     initFaq();
     initViewTransitionCleanup();
+    initThemeTransition();
   }
 
   if (document.readyState === 'loading') {
