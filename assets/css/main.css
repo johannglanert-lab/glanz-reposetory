@@ -1580,9 +1580,33 @@ html.preloader-skip .preloader {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .values {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: var(--space-3);
+  }
+  .values__item {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+  .values__icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: var(--space-3);
+  }
+  .values__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .values__title {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-1);
+    letter-spacing: var(--tracking-tight);
+  }
+  .values__text {
+    font-size: var(--text-xs);
+    line-height: var(--lh-snug);
   }
 }
 
