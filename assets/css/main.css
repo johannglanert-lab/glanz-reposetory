@@ -668,7 +668,7 @@ html.preloader-skip .preloader {
 .site-header__logo-mark {
   display: inline-flex;
   align-items: center;
-  height: 60px;
+  height: 48px;
   flex-shrink: 0;
 }
 
@@ -677,12 +677,6 @@ html.preloader-skip .preloader {
   height: 100%;
   width: auto;
   display: block;
-}
-
-/* Header: GD-Logo-Bild komplett ausgeblendet, nur Schriftzug "GlanzDesign" sichtbar.
-   Footer (.site-footer .site-header__logo-mark) bleibt absichtlich unverändert. */
-.site-header .site-header__logo-mark {
-  display: none;
 }
 
 .site-header__logo-text {
