@@ -679,6 +679,12 @@ html.preloader-skip .preloader {
   display: block;
 }
 
+/* Header-Logo: violette Gradient-Töne nach Königsblau verschieben.
+   Original-PNG bleibt unangetastet; Footer behält das originale Erscheinungsbild. */
+.site-header .site-header__logo-mark img {
+  filter: hue-rotate(-22deg) saturate(1.05);
+}
+
 .site-header__logo-text {
   font-size: 1.5rem;
   font-weight: var(--fw-medium);
