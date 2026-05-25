@@ -679,10 +679,19 @@ html.preloader-skip .preloader {
   display: block;
 }
 
-/* Header-Logo: violette Gradient-Töne nach Königsblau verschieben.
-   Original-PNG bleibt unangetastet; Footer behält das originale Erscheinungsbild. */
+/* Logo-Bild: Original-PNG hat einen blau→violetten Gradient.
+   Wir verschieben die violetten Töne stärker ins Blau und reduzieren die
+   Sättigung, sodass beide Logos (Header + Footer) einheitlich dunkelblau
+   wirken — der Gradient bleibt subtil sichtbar, aber kein Lila-Anteil mehr. */
+.site-header__logo-mark img {
+  filter: hue-rotate(-30deg) saturate(0.78) brightness(0.95);
+}
+
+/* Header-Logo: das PNG hat asymmetrischen Whitespace, deshalb sitzt der
+   optische Schwerpunkt minimal unterhalb der Container-Mitte. Leicht
+   hochziehen, damit Logo und "GlanzDesign"-Schriftzug auf einer Linie sind. */
 .site-header .site-header__logo-mark img {
-  filter: hue-rotate(-22deg) saturate(1.05);
+  transform: translateY(-3px);
 }
 
 .site-header__logo-text {
