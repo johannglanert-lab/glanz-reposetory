@@ -679,22 +679,6 @@ html.preloader-skip .preloader {
   display: block;
 }
 
-/* Header-Logo only — Footer bleibt komplett unverändert.
-   1) Container schmaler + overflow:hidden → schneidet den dünnen vertikalen
-      Strich rechts im PNG ab, der sonst wie ein Separator zur Schrift wirkt.
-   2) hue-rotate verschiebt die violetten Töne ins Blau, ohne Sättigung
-      oder Helligkeit anzutasten (sonst wirkt das Logo gräulich).
-   3) translateY(-3px) gleicht den asymmetrischen Whitespace im PNG aus,
-      damit das Monogramm auf einer Linie mit "GlanzDesign" sitzt. */
-.site-header .site-header__logo-mark {
-  width: 42px;
-  overflow: hidden;
-}
-.site-header .site-header__logo-mark img {
-  filter: hue-rotate(-25deg);
-  transform: translateY(-3px);
-}
-
 .site-header__logo-text {
   font-size: 1.5rem;
   font-weight: var(--fw-medium);
