@@ -260,80 +260,6 @@
   }
 
   /* ────────────────────────────────────────────────────────────────── */
-  /* MODULE 5: TESTIMONIALS CAROUSEL                                    */
-  /* ────────────────────────────────────────────────────────────────── */
-
-  function initCarousel() {
-    const carousel = document.querySelector('.carousel');
-    const slides = document.querySelectorAll('.carousel__slide');
-    const dots = document.querySelectorAll('.carousel__dot');
-    const btnPrev = document.getElementById('carousel-prev');
-    const btnNext = document.getElementById('carousel-next');
-
-    if (!carousel || !slides.length) return;
-
-    let current = 0;
-    let autoplayTimer = null;
-    const AUTOPLAY_MS = 7000;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function setSlide(index) {
-      slides[current].classList.remove('carousel__slide--active');
-      slides[current].setAttribute('aria-hidden', 'true');
-      dots[current].classList.remove('carousel__dot--active');
-      dots[current].setAttribute('aria-selected', 'false');
-
-      slides[index].classList.add('carousel__slide--active');
-      slides[index].removeAttribute('aria-hidden');
-      dots[index].classList.add('carousel__dot--active');
-      dots[index].setAttribute('aria-selected', 'true');
-
-      current = index;
-    }
-
-    function goTo(index) {
-      const next = (index + slides.length) % slides.length;
-      setSlide(next);
-      resetAutoplay();
-    }
-
-    function resetAutoplay() {
-      clearInterval(autoplayTimer);
-      if (reduceMotion) return;
-      autoplayTimer = setInterval(() => goTo(current + 1), AUTOPLAY_MS);
-    }
-
-    slides[0].classList.add('carousel__slide--active');
-    slides.forEach((s, i) => {
-      if (i !== 0) s.setAttribute('aria-hidden', 'true');
-    });
-
-    if (btnPrev) btnPrev.addEventListener('click', () => goTo(current - 1));
-    if (btnNext) btnNext.addEventListener('click', () => goTo(current + 1));
-
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => goTo(i));
-    });
-
-    carousel.addEventListener('mouseenter', () => clearInterval(autoplayTimer));
-    carousel.addEventListener('mouseleave', resetAutoplay);
-    carousel.addEventListener('focusin', () => clearInterval(autoplayTimer));
-    carousel.addEventListener('focusout', resetAutoplay);
-
-    let touchStartX = 0;
-    carousel.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', e => {
-      const diff = touchStartX - e.changedTouches[0].screenX;
-      if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
-    }, { passive: true });
-
-    resetAutoplay();
-  }
-
-  /* ────────────────────────────────────────────────────────────────── */
   /* MODULE 6: CONTACT FORM                                             */
   /* ────────────────────────────────────────────────────────────────── */
 
@@ -698,7 +624,6 @@
     initHeaderScroll();
     initCountUp();
     initScrollReveal();
-    initCarousel();
     initContactForm();
     initFooterYear();
     initAnchorFocus();
