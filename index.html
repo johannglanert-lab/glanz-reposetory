@@ -4,12 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0052CC">
-    <title>Glanz Design – Premium-Websites aus Köln</title>
-    <meta name="description" content="Webdesign-Agentur aus Köln für Restaurants, Arztpraxen, Handwerker und Dienstleister. Wir gestalten Websites, die wirklich funktionieren.">
-    <meta property="og:title" content="Glanz Design – Premium-Websites aus Köln">
-    <meta property="og:description" content="Webdesign für KMU. Einfach, elegant, wirksam.">
+    <title>Webdesign Köln – Premium-Websites für KMU | Glanz Design</title>
+    <meta name="description" content="Webdesign aus Köln für Restaurants, Arztpraxen, Handwerker und Dienstleister. Glanz Design gestaltet schnelle, elegante Websites, die wirklich Kunden gewinnen. Erstgespräch kostenlos.">
+    <link rel="canonical" href="https://glanzdesign.eu/">
+    <meta property="og:title" content="Webdesign Köln – Premium-Websites für KMU | Glanz Design">
+    <meta property="og:description" content="Webdesign aus Köln für KMU. Einfach, elegant, wirksam – Websites, die Kunden gewinnen.">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="de_DE">
+    <meta property="og:url" content="https://glanzdesign.eu/">
+    <meta property="og:site_name" content="Glanz Design">
+    <meta property="og:image" content="https://glanzdesign.eu/assets/images/logo.png">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Webdesign Köln – Premium-Websites für KMU | Glanz Design">
+    <meta name="twitter:description" content="Webdesign aus Köln für KMU. Einfach, elegant, wirksam.">
+    <meta name="twitter:image" content="https://glanzdesign.eu/assets/images/logo.png">
 
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/fraunces-latin.woff2" crossorigin>
@@ -41,25 +49,95 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Glanz Design",
-      "url": "https://glanzdesign.eu",
-      "logo": "https://glanzdesign.eu/assets/images/logo.png",
-      "image": "https://glanzdesign.eu/assets/images/logo.png",
-      "email": "kontakt@glanzdesign.eu",
-      "description": "Webdesign-Agentur aus Köln für Restaurants, Arztpraxen, Handwerker und Dienstleister. Wir gestalten Websites, die wirklich funktionieren.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Köln",
-        "addressRegion": "NRW",
-        "addressCountry": "DE"
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "Deutschland"
-      },
-      "priceRange": "€€",
-      "knowsAbout": ["Webdesign", "Website-Entwicklung", "Website-Erneuerung", "SEO", "Performance-Optimierung"]
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://glanzdesign.eu/#website",
+          "url": "https://glanzdesign.eu/",
+          "name": "Glanz Design",
+          "inLanguage": "de",
+          "publisher": { "@id": "https://glanzdesign.eu/#business" }
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://glanzdesign.eu/#business",
+          "name": "Glanz Design",
+          "alternateName": "Glanz Design – Webdesign Köln",
+          "description": "Webdesign-Agentur aus Köln für Restaurants, Arztpraxen, Handwerker und Dienstleister. Wir gestalten Websites, die wirklich funktionieren.",
+          "url": "https://glanzdesign.eu/",
+          "telephone": "+4917673972184",
+          "email": "kontakt@glanzdesign.eu",
+          "logo": "https://glanzdesign.eu/assets/images/logo.png",
+          "image": "https://glanzdesign.eu/assets/images/logo.png",
+          "priceRange": "€€",
+          "currenciesAccepted": "EUR",
+          "paymentAccepted": "Überweisung, Rechnung",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Marsdorfer Str. 34",
+            "postalCode": "50858",
+            "addressLocality": "Köln",
+            "addressRegion": "NRW",
+            "addressCountry": "DE"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 50.9281,
+            "longitude": 6.8392
+          },
+          "areaServed": [
+            { "@type": "City", "name": "Köln" },
+            {
+              "@type": "GeoCircle",
+              "geoMidpoint": { "@type": "GeoCoordinates", "latitude": 50.9375, "longitude": 6.9603 },
+              "geoRadius": "40000"
+            }
+          ],
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            "opens": "08:00",
+            "closes": "18:00"
+          },
+          "founder": { "@type": "Person", "name": "Johann Glanert" },
+          "knowsLanguage": "de",
+          "knowsAbout": ["Webdesign", "Website-Entwicklung", "Website-Erneuerung", "Responsive Webdesign", "SEO", "Local SEO", "Performance-Optimierung"],
+          "slogan": "Premium-Websites durch echte Partnerschaft."
+        },
+        {
+          "@type": "Service",
+          "@id": "https://glanzdesign.eu/#service-neue-website",
+          "serviceType": "Webdesign / Neuerstellung von Websites",
+          "name": "Neue Website",
+          "description": "Erstellung einer neuen Website von Grund auf – individuelles Konzept, Mobile-First-Entwicklung, SEO-Grundlagen inklusive.",
+          "provider": { "@id": "https://glanzdesign.eu/#business" },
+          "areaServed": { "@type": "City", "name": "Köln" }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://glanzdesign.eu/#service-erneuerung",
+          "serviceType": "Website-Modernisierung / Relaunch",
+          "name": "Website-Erneuerung",
+          "description": "Modernisierung bestehender Websites: aktuelles Design, bessere Ladezeiten, höhere Conversion. Bestehende Inhalte werden übernommen.",
+          "provider": { "@id": "https://glanzdesign.eu/#business" },
+          "areaServed": { "@type": "City", "name": "Köln" }
+        },
+        {
+          "@type": "Service",
+          "@id": "https://glanzdesign.eu/#service-analyse",
+          "serviceType": "Website-Analyse, Beratung, SEO-Audit",
+          "name": "Analyse & Beratung",
+          "description": "Performance- und SEO-Audit bestehender Websites mit konkreten Handlungsempfehlungen. Erstgespräch und Analyse kostenlos und unverbindlich.",
+          "provider": { "@id": "https://glanzdesign.eu/#business" },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "Erstgespräch und Erst-Analyse kostenlos."
+          },
+          "areaServed": { "@type": "City", "name": "Köln" }
+        }
+      ]
     }
     </script>
 
