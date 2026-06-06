@@ -34,7 +34,7 @@
       } catch (_) {}
     </script>
 
-    <link rel="stylesheet" href="assets/css/main.css?v=22">
+    <link rel="stylesheet" href="assets/css/main.css?v=29">
 
     <noscript>
         <style>
@@ -218,7 +218,7 @@
 
             <nav class="site-header__nav" aria-label="Hauptnavigation">
                 <ul class="site-header__nav-list" role="list">
-                    <li><a href="#ueber-uns" class="site-header__nav-link">Über uns</a></li>
+                    <li><a href="ueber-uns.html" class="site-header__nav-link">Über uns</a></li>
                     <li><a href="leistungen.html" class="site-header__nav-link">Leistungen</a></li>
                     <li><a href="projekte.html" class="site-header__nav-link">Projekte</a></li>
                     <li><a href="#kontakt" class="site-header__nav-link">Kontakt</a></li>
@@ -253,7 +253,7 @@
          korrekt relativ zum Viewport. -->
     <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile Navigation" aria-hidden="true">
         <ul class="mobile-nav__list" role="list">
-            <li><a href="#ueber-uns" class="mobile-nav__link">Über uns</a></li>
+            <li><a href="ueber-uns.html" class="mobile-nav__link">Über uns</a></li>
             <li><a href="leistungen.html" class="mobile-nav__link">Leistungen</a></li>
             <li><a href="projekte.html" class="mobile-nav__link">Projekte</a></li>
             <li><a href="#kontakt" class="mobile-nav__link">Kontakt</a></li>
@@ -394,133 +394,53 @@
     </section>
 
     <!-- ÜBER UNS -->
-    <section id="ueber-uns" class="section about">
-        <div class="shell about__inner">
-            <div class="about__copy reveal">
-                <span class="section__eyebrow">Über uns</span>
-                <h2 class="section__title">
-                    Webdesign mit Herz aus Köln.
-                </h2>
-                <p class="about__lead">
-                    Glanz Design ist eine kleine Webdesign-Agentur mit Sitz in Köln.
-                    Wir glauben, dass Ihre Website die Qualität Ihres Unternehmens widerspiegelt.
-                </p>
-                <p class="about__text">
-                    Deshalb beginnen wir nicht mit Designs, sondern mit Gesprächen.
-                    Wir wollen verstehen, wer Sie sind, was Sie tun und wen Sie erreichen
-                    möchten. Erst dann setzen wir uns an den Entwurf.
-                </p>
-            </div>
-
-            <ul class="values" role="list">
-                <li class="values__item reveal reveal--delay-1">
-                    <div class="values__icon" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                            <path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Wir hören zu.</h3>
-                    <p class="values__text">Web-Design ganz nach Ihren Wünschen.</p>
-                </li>
-                <li class="values__item reveal reveal--delay-1">
-                    <div class="values__icon" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                            <path d="M11 2l2.5 6 6.5.5-5 4.5 1.5 6.5L11 16l-5.5 3.5L7 13 2 8.5l6.5-.5L11 2z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Wir liefern Qualität.</h3>
-                    <p class="values__text">Anschauliche Websites ohne Kompromisse.</p>
-                </li>
-                <li class="values__item reveal reveal--delay-2">
-                    <div class="values__icon" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                            <path d="M11 7v4l2.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Wir bleiben unkompliziert.</h3>
-                    <p class="values__text">Zuverlässige Ergebnisse in kurzer Zeit.</p>
-                </li>
-                <li class="values__item reveal reveal--delay-2">
-                    <div class="values__icon" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                            <path d="M11 19s-7-4-7-10a4 4 0 017-2.5A4 4 0 0118 9c0 6-7 10-7 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="values__title">Wir kümmern uns.</h3>
-                    <p class="values__text">Partnerschaftlich im engen Austausch während und nach Ihrem Projekt.</p>
-                </li>
-            </ul>
+    <!-- PROZESS — gepinnte Scroll-Switch-Showpiece (Technik: docs/referenz-publitec-flexline.md §3) -->
+    <section id="prozess" class="section process process--switch" data-theme-target="dark" data-switch>
+        <!-- Überschrift im normalen Fluss: scrollt nach oben weg, BEVOR die Schritte pinnen -->
+        <div class="shell process-switch__head reveal">
+            <span class="section__eyebrow">Unser Prozess</span>
+            <h2 class="section__title">In drei Schritten zu Ihrer neuen Website.</h2>
         </div>
-    </section>
 
-    <!-- PROCESS -->
-    <section id="prozess" class="section process" data-theme-target="dark">
-        <div class="shell">
-            <div class="section__header reveal">
-                <span class="section__eyebrow">Unser Prozess</span>
-                <h2 class="section__title">In drei Schritten zu Ihrer<br>neuen Website.</h2>
-                <p class="section__subtitle">
-                    Transparent, partnerschaftlich und ohne unnötige Komplexität.
-                </p>
+        <!-- Gepinnter Schritt-Block: Nummer links, Text-Block rechts, switcht 1 → 2 → 3 -->
+        <div class="process-switch__sticky">
+            <div class="shell process-switch__panel">
+                <article class="process-slide is-active" data-switch-item aria-hidden="false">
+                    <span class="process-slide__num" aria-hidden="true">01</span>
+                    <div class="process-slide__body">
+                        <h3 class="process-slide__title">Das Gespräch</h3>
+                        <p class="process-slide__text">Wir hören erst zu. In einem kostenlosen Erstgespräch verstehen wir Ihr Unternehmen, Ihre Ziele und Ihre Zielgruppe – bevor wir über Design reden.</p>
+                        <div class="process-slide__meta">
+                            <span class="process-slide__meta-label">Dauer</span>
+                            <span class="process-slide__meta-value">30–60 Minuten</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="process-slide" data-switch-item aria-hidden="true">
+                    <span class="process-slide__num" aria-hidden="true">02</span>
+                    <div class="process-slide__body">
+                        <h3 class="process-slide__title">Das Design</h3>
+                        <p class="process-slide__text">Wir gestalten Ihre individuelle Website – elegant, modern und perfekt auf Ihre Marke abgestimmt. Mit klaren Feedback-Schleifen, bei denen Sie jederzeit mitentscheiden.</p>
+                        <div class="process-slide__meta">
+                            <span class="process-slide__meta-label">Dauer</span>
+                            <span class="process-slide__meta-value">2–4 Wochen</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="process-slide" data-switch-item aria-hidden="true">
+                    <span class="process-slide__num" aria-hidden="true">03</span>
+                    <div class="process-slide__body">
+                        <h3 class="process-slide__title">Der Launch</h3>
+                        <p class="process-slide__text">Ihre Website geht live. Wir begleiten Sie auch danach – mit Wartung, Updates und persönlichem Support, damit alles dauerhaft läuft.</p>
+                        <div class="process-slide__meta">
+                            <span class="process-slide__meta-label">Inklusive</span>
+                            <span class="process-slide__meta-value">3 Monate Support</span>
+                        </div>
+                    </div>
+                </article>
             </div>
-
-            <ol class="process__grid" role="list">
-                <li class="process-card reveal">
-                    <div class="process-card__number" aria-hidden="true">01</div>
-                    <div class="process-card__icon" aria-hidden="true">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="process-card__title">Das Gespräch</h3>
-                    <p class="process-card__text">
-                        Wir hören erst zu. In einem kostenlosen Erstgespräch verstehen wir Ihr
-                        Unternehmen, Ihre Ziele und Ihre Zielgruppe.
-                    </p>
-                    <div class="process-card__meta">
-                        <span class="process-card__meta-label">Dauer</span>
-                        <span class="process-card__meta-value">30–60 Minuten</span>
-                    </div>
-                </li>
-
-                <li class="process-card reveal reveal--delay-1">
-                    <div class="process-card__number" aria-hidden="true">02</div>
-                    <div class="process-card__icon" aria-hidden="true">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="process-card__title">Das Design</h3>
-                    <p class="process-card__text">
-                        Wir gestalten Ihre individuelle Website – elegant, modern und perfekt
-                        auf Ihre Marke abgestimmt. Mit Feedback-Schleifen.
-                    </p>
-                    <div class="process-card__meta">
-                        <span class="process-card__meta-label">Dauer</span>
-                        <span class="process-card__meta-value">2–4 Wochen</span>
-                    </div>
-                </li>
-
-                <li class="process-card reveal reveal--delay-2">
-                    <div class="process-card__number" aria-hidden="true">03</div>
-                    <div class="process-card__icon" aria-hidden="true">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M14 2L4 13h7l-1 9 10-11h-7l1-9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="process-card__title">Der Launch</h3>
-                    <p class="process-card__text">
-                        Ihre Website geht live. Wir begleiten Sie auch danach – mit Wartung,
-                        Updates und persönlichem Support.
-                    </p>
-                    <div class="process-card__meta">
-                        <span class="process-card__meta-label">Inklusive</span>
-                        <span class="process-card__meta-value">3 Monate Support</span>
-                    </div>
-                </li>
-            </ol>
         </div>
     </section>
 
@@ -956,7 +876,7 @@
             <nav class="site-footer__nav" aria-label="Footer Navigation">
                 <h3 class="site-footer__heading">Navigation</h3>
                 <ul class="site-footer__list">
-                    <li><a href="#ueber-uns" class="site-footer__link">Über uns</a></li>
+                    <li><a href="ueber-uns.html" class="site-footer__link">Über uns</a></li>
                     <li><a href="leistungen.html" class="site-footer__link">Leistungen</a></li>
                     <li><a href="projekte.html" class="site-footer__link">Projekte</a></li>
                     <li><a href="webdesign-koeln.html" class="site-footer__link">Webdesign Köln</a></li>
@@ -1000,6 +920,6 @@
     </footer>
 
     <script src="assets/js/lenis.min.js?v=1" defer></script>
-    <script src="assets/js/site.js?v=13" defer></script>
+    <script src="assets/js/site.js?v=20" defer></script>
 </body>
 </html>

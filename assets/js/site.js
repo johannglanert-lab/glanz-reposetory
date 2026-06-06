@@ -614,6 +614,226 @@
   }
 
   /* ────────────────────────────────────────────────────────────────── */
+  /* MODULE 12: SCROLL-FILL HEADLINES                                   */
+  /* Zerlegt Section-Titles in <span class="char">, die sich beim       */
+  /* Scrollen Zeichen für Zeichen mit Farbe füllen.                     */
+  /* Technik dokumentiert in docs/referenz-publitec-flexline.md (1).    */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  function initScrollFillHeadlines() {
+    // Nur echte Section-Headlines füllen sich — bewusst NICHT die FAQ-Fragen
+    // (auf Wunsch: der Effekt wirkt nur bei den großen Überschriften).
+    const els = Array.from(document.querySelectorAll(
+      '.section__title, .contact__title'
+    ));
+    if (!els.length) return;
+
+    // Text rekursiv in einzelne <span class="char"> wickeln.
+    // <br> und etwaige Akzent-Spans bleiben erhalten, Leerzeichen bleiben echt.
+    function wrap(node) {
+      Array.from(node.childNodes).forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const text = child.textContent;
+          if (!text || !text.trim()) return;
+          const frag = document.createDocumentFragment();
+          for (const ch of text) {
+            if (ch === ' ') {
+              frag.appendChild(document.createTextNode(' '));
+            } else {
+              const span = document.createElement('span');
+              span.className = 'char';
+              span.textContent = ch;
+              frag.appendChild(span);
+            }
+          }
+          child.parentNode.replaceChild(frag, child);
+        } else if (child.nodeType === Node.ELEMENT_NODE && !child.classList.contains('char')) {
+          wrap(child);
+        }
+      });
+    }
+
+    els.forEach(el => {
+      if (el.dataset.fillPrepared === '1') return;
+      wrap(el);
+      el.dataset.fillPrepared = '1';
+    });
+
+    // Reduced-Motion: sofort alle Zeichen sichtbar, keine Scroll-Logik.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.querySelectorAll('.char').forEach(c => c.classList.add('is-visible')));
+      return;
+    }
+
+    // Nur Headlines nahe/im Viewport berechnen (Performance).
+    const active = new Set();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { e.isIntersecting ? active.add(e.target) : active.delete(e.target); });
+      schedule();
+    }, { threshold: 0, rootMargin: '12% 0px 12% 0px' });
+    els.forEach(el => io.observe(el));
+
+    let ticking = false;
+    function schedule() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const start = vh * 0.92;   // Headline kommt von unten rein
+      const end   = vh * 0.30;   // Headline oben fast durch → voll gefüllt
+      const list = active.size ? active : els;
+      list.forEach(el => {
+        const chars = el.querySelectorAll('.char');
+        if (!chars.length) return;
+        const top = el.getBoundingClientRect().top;
+        let p = (start - top) / (start - end);
+        p = Math.max(0, Math.min(1, p));
+        const reveal = Math.floor(p * chars.length);
+        chars.forEach((c, i) => c.classList.toggle('is-visible', i < reveal));
+      });
+    }
+
+    if (window.__glanzLenis && typeof window.__glanzLenis.on === 'function') {
+      window.__glanzLenis.on('scroll', schedule);
+    }
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('load', schedule);
+    update();
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* MODULE 13: STICKY SCROLL-SWITCH (kontinuierlich)                   */
+  /* Gepinnte Sektion (Prozess): die Schritte drehen sich beim Scrollen */
+  /* flüssig herein und wieder heraus — kein hartes Umschalten, sondern */
+  /* pro Frame direkt an den Scroll-Fortschritt gekoppelt (Opacity +    */
+  /* Y-Versatz + leichte X-Rotation = „Drum"-Gefühl). Mit Verweil-Phase */
+  /* je Schritt, damit jeder Schritt kurz im Fokus „ruht". Funktioniert */
+  /* auf ALLEN Breiten (auch mobil); nur reduced-motion entstapelt.     */
+  /* Technik dokumentiert in docs/referenz-publitec-flexline.md (§3).   */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  function initStickyScrollSwitch() {
+    const sections = document.querySelectorAll('[data-switch]');
+    if (!sections.length) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const smooth = t => t * t * (3 - 2 * t); // smoothstep
+
+    sections.forEach(section => {
+      const items = Array.from(section.querySelectorAll('[data-switch-item]'));
+      // Optional: Überschrift scrollt im normalen Fluss weg, nur dieser Block pinnt.
+      const sticky = section.querySelector('.process-switch__sticky');
+      const head = section.querySelector('.process-switch__head');
+      const panel = section.querySelector('.process-switch__panel');
+      const count = items.length;
+      if (count < 2) return;
+
+      section.style.setProperty('--switch-count', count);
+      const total = count - 1;       // Anzahl Übergänge
+      const HOLD = 0.20;            // kurze Verweil-Phase je Schritt (vorher 0.42)
+      const FADE = 0.58;           // Sicht-Fenster je Schritt: <0.5 = strikt nacheinander,
+                                   // 0.58 = winziger Crossfade ohne sichtbares Überlappen
+      const SHIFT = 40;            // px vertikaler Versatz (trennt aus-/eingehenden Text)
+      const ROT = 5;               // Grad X-Rotation je Schritt (dezentes Drum-Gefühl)
+
+      // Reduced-Motion: nichts animieren — CSS zeigt alle Schritte gestapelt.
+      if (reduce) {
+        items.forEach(it => it.setAttribute('aria-hidden', 'false'));
+        return;
+      }
+
+      const LEAD_SHIFT = 0.26; // Anteil der Viewport-Höhe, um den Schritt 1 anfangs
+                               // höher (nah unter der Überschrift) startet.
+
+      function render() {
+        const rect = section.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const scrolled = -rect.top; // wie weit der Sektions-Anfang über dem Viewport-Top liegt
+        let progress;
+        let leadT = 1;
+        if (sticky) {
+          // Pin beginnt erst, nachdem die Überschrift (headH) weggescrollt ist;
+          // er endet, wenn der gepinnte Block (stickyH) das Sektionsende erreicht.
+          const headH = head ? head.offsetHeight : 0;
+          const stickyH = sticky.offsetHeight || vh;
+          const denom = Math.max(rect.height - stickyH - headH, 1);
+          progress = Math.min(Math.max((scrolled - headH) / denom, 0), 1);
+          // Lead-in (0 → 1) während die Überschrift wegscrollt.
+          leadT = headH > 0 ? Math.min(Math.max(scrolled / headH, 0), 1) : 1;
+        } else {
+          const scrollable = Math.max(rect.height - vh, 1);
+          progress = Math.min(Math.max(scrolled, 0), scrollable) / scrollable;
+        }
+
+        // Panel startet nah unter der Überschrift (nach oben verschoben) und
+        // gleitet in die vertikale Mitte, während die Überschrift rausscrollt.
+        if (panel) {
+          const introY = -(1 - leadT) * vh * LEAD_SHIFT;
+          panel.style.transform = 'translate3d(0,' + introY.toFixed(1) + 'px,0)';
+        }
+
+        // Rohposition 0..total, mit Verweil-Phase: jeder Schritt ruht erst,
+        // dann gleitet er smooth zum nächsten (kein Snap).
+        const raw = progress * total;
+        let i = Math.floor(raw);
+        if (i > total) i = total;
+        if (i < 0) i = 0;
+        const f = raw - i;                                  // 0..1 innerhalb des Schritts
+        let tf = f <= HOLD ? 0 : (f - HOLD) / (1 - HOLD);
+        tf = smooth(Math.min(Math.max(tf, 0), 1));
+        const pos = i + tf;                                 // verweilt, dann gleitet
+
+        const nearest = Math.round(pos);
+
+        items.forEach((item, j) => {
+          const d = pos - j;             // signierter Abstand in Schritten
+          const ad = Math.abs(d);
+          // Sequenzielles Aus-/Einblenden: ein Schritt ist nur innerhalb FADE
+          // sichtbar → der alte Text ist quasi weg, bevor der neue erscheint.
+          let op = 1 - ad / FADE;
+          if (op < 0) op = 0;
+          const ty = -d * SHIFT;         // d<0 (Schritt liegt vor uns) → kommt von unten
+          const rx = -d * ROT;           // leichte Drehung = Drum-Gefühl
+          const sc = 1 - Math.min(ad, 1) * 0.04;
+          item.style.opacity = op.toFixed(3);
+          item.style.transform =
+            'translate3d(0,' + ty.toFixed(1) + 'px,0) rotateX(' + rx.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+          item.style.zIndex = String(100 - Math.round(ad * 100));
+          item.style.pointerEvents = (j === nearest) ? 'auto' : 'none';
+          item.setAttribute('aria-hidden', j === nearest ? 'false' : 'true');
+        });
+      }
+
+      // Kontinuierlicher rAF-Loop, aber nur solange die Sektion sichtbar ist.
+      let running = false;
+      let rafId = 0;
+      function loop() {
+        render();
+        if (running) rafId = requestAnimationFrame(loop);
+      }
+      function start() {
+        if (!running) { running = true; rafId = requestAnimationFrame(loop); }
+      }
+      function stop() {
+        running = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => (e.isIntersecting ? start() : stop()));
+      }, { threshold: 0 });
+      io.observe(section);
+
+      window.addEventListener('resize', render);
+      render(); // Startzustand sofort setzen (kein FOUC).
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
   /* INIT                                                               */
   /* ────────────────────────────────────────────────────────────────── */
 
@@ -631,6 +851,8 @@
     initFaq();
     initViewTransitionCleanup();
     initThemeTransition();
+    initScrollFillHeadlines();
+    initStickyScrollSwitch();
   }
 
   if (document.readyState === 'loading') {

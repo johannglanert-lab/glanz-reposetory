@@ -3986,3 +3986,237 @@ html.preloader-skip .preloader {
     padding: var(--space-6);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* HEADLINE-FILL (scroll-getrieben)                                        */
+/* Überschriften & FAQ-Fragen sind anfangs blass; beim Scrollen füllen     */
+/* sich die Buchstaben Zeichen für Zeichen mit Farbe. JS toggelt pro       */
+/* .char die Klasse .is-visible je nach Scroll-Fortschritt.                */
+/* Referenz-Technik: docs/referenz-publitec-flexline.md (Abschnitt 1).     */
+/* ─────────────────────────────────────────────────────────────────────── */
+:root {
+  --char-dim: rgba(18, 24, 40, 0.16);
+  --char-on:  var(--text-primary);
+}
+
+.char {
+  color: var(--char-dim);
+  transition: color 0.22s linear;
+}
+
+.char.is-visible {
+  color: var(--char-on);
+}
+
+/* Dark-Sektion (z. B. Prozess): helle Schrift, dezent ausgegraut */
+[data-theme-target="dark"] {
+  --char-dim: rgba(255, 255, 255, 0.16);
+  --char-on:  var(--section-dark-fg, #ffffff);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .char {
+    color: var(--char-on);
+    transition: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* ABOUT — Button-Reihe (Über-uns-Seite)                                   */
+/* ─────────────────────────────────────────────────────────────────────── */
+.about__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+/* PROZESS — gepinnte Scroll-Switch-Showpiece                              */
+/* Sektion wird hoch (count × 100vh), innerer Block bleibt gepinnt; beim    */
+/* Scrollen switcht JS den aktiven Schritt mit 3D-Übergang.                 */
+/* Technik dokumentiert in docs/referenz-publitec-flexline.md (§3).        */
+/* ─────────────────────────────────────────────────────────────────────── */
+.process--switch {
+  padding-block: 0;
+  /* Sektionshöhe = Pin-Strecke der Schritte (count × 80vh) + Platz, damit die
+     Überschrift oben erst wegscrollen kann, bevor der erste Schritt pinnt. */
+  min-height: calc(var(--switch-count, 3) * 80vh + 40vh);
+}
+
+/* Überschrift im normalen Fluss — scrollt nach oben weg, pinnt NICHT mit */
+.process-switch__head {
+  text-align: center;
+  max-width: 760px;
+  margin-inline: auto;
+  padding-top: clamp(var(--space-12), 12vh, 160px);
+  padding-bottom: clamp(var(--space-6), 4vh, var(--space-12));
+}
+.process-switch__head .section__title {
+  margin-top: var(--space-4);
+}
+
+/* Nur der Schritt-Block pinnt; Ruheposition = vertikal zentriert. Den „Lead-in"
+   (Schritt 1 startet nah unter der Überschrift und rückt in die Mitte, während
+   die Überschrift wegscrollt) steuert JS über einen translateY am Panel. */
+.process-switch__sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Bühne für die übereinanderliegenden Schritte */
+.process-switch__panel {
+  position: relative;
+  width: 100%;
+  min-height: clamp(300px, 38vh, 400px);
+  perspective: 1400px;
+}
+
+/* Ein Schritt = große Nummer links + Text-Block rechts, als Gruppe zentriert,
+   beide auf gleicher Höhe (align-items: center). */
+.process-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(var(--space-6), 4vw, var(--space-12));
+  text-align: left;
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: opacity, transform;
+}
+/* FOUC-Schutz vor dem JS: nur der erste Schritt sichtbar. Danach setzt JS
+   pro Frame Opacity + Transform inline — direkt an den Scroll gekoppelt;
+   das Aus-/Einblenden läuft sequenziell, damit sich die Texte nicht
+   sichtbar überlappen. */
+.process-slide { opacity: 0; }
+.process-slide.is-active { opacity: 1; }
+
+.process-slide__num {
+  flex: none;
+  font-family: var(--font-display, var(--font-sans));
+  font-size: clamp(4.5rem, 12vw, 11rem);
+  font-weight: var(--fw-bold);
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  color: var(--color-blue-400);
+  font-variant-numeric: tabular-nums;
+}
+.process-slide__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 46ch;
+}
+.process-slide__title {
+  font-size: clamp(var(--text-3xl), 3.4vw, var(--text-5xl));
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+  color: var(--section-dark-fg);
+  margin-bottom: var(--space-4);
+}
+.process-slide__text {
+  font-size: var(--text-lg);
+  line-height: var(--lh-normal);
+  color: var(--section-dark-fg-muted);
+  margin-bottom: var(--space-6);
+}
+.process-slide__meta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--section-dark-border);
+}
+.process-slide__meta-label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-weight: var(--fw-semibold);
+  color: var(--color-blue-400);
+}
+.process-slide__meta-value {
+  font-size: var(--text-base);
+  font-weight: var(--fw-semibold);
+  color: var(--section-dark-fg);
+  margin-top: 2px;
+}
+
+/* Tablet (769–1023px): Layout bleibt Nummer-links, nur etwas kleiner */
+@media (max-width: 1023px) {
+  .process-switch__panel { min-height: clamp(280px, 42vh, 400px); }
+  .process-slide__num { font-size: clamp(3.5rem, 11vw, 6.5rem); }
+}
+
+/* Mobile (≤ 768px): gestapelt — große Nummer oben, Text darunter, mit
+   ordentlichen Seitenrändern (Slides sind absolut → padding-inline am Slide). */
+@media (max-width: 768px) {
+  .process-switch__panel {
+    min-height: clamp(340px, 52vh, 460px);
+  }
+  .process-slide {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-3);
+    padding-inline: clamp(var(--space-5), 7vw, var(--space-10));
+  }
+  .process-slide__num {
+    font-size: clamp(4.5rem, 22vw, 7rem);
+    line-height: 0.9;
+    margin-bottom: var(--space-1);
+  }
+  .process-slide__body {
+    max-width: none;
+  }
+  .process-slide__title {
+    font-size: clamp(var(--text-2xl), 7vw, var(--text-4xl));
+    margin-bottom: var(--space-3);
+  }
+  .process-slide__text {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-5);
+  }
+}
+
+/* Reduced-Motion: ebenfalls entstapeln, keine Übergänge (auch auf Desktop) */
+@media (prefers-reduced-motion: reduce) {
+  .process--switch {
+    padding-block: var(--space-16);
+    min-height: 0;
+  }
+  .process-switch__head {
+    padding-top: 0;
+    padding-bottom: var(--space-10);
+  }
+  .process-switch__sticky {
+    position: static;
+    min-height: 0;
+    overflow: visible;
+  }
+  .process-switch__panel {
+    min-height: 0;
+    perspective: none;
+  }
+  .process-slide {
+    position: static;
+    inset: auto;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .process-slide + .process-slide {
+    margin-top: var(--space-12);
+    padding-top: var(--space-12);
+    border-top: 1px solid var(--section-dark-border);
+  }
+}
