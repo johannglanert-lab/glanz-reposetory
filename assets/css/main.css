@@ -3886,6 +3886,10 @@ html.preloader-skip .preloader {
 /* Text-Anpassungen innerhalb des Panels */
 .section.contact .contact__title {
   color: var(--color-white);
+  /* Headline-Fill liegt auf dunkelblauem Panel → helle Buchstaben-Variablen,
+     sonst wären die .char-Spans dunkel (schwarz auf dunkelblau = unsichtbar). */
+  --char-dim: rgba(255, 255, 255, 0.18);
+  --char-on: var(--color-white);
 }
 
 .section.contact .contact__text {
