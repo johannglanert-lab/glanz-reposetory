@@ -745,8 +745,10 @@
         return;
       }
 
-      const LEAD_SHIFT = 0.26; // Anteil der Viewport-Höhe, um den Schritt 1 anfangs
-                               // höher (nah unter der Überschrift) startet.
+      const LEAD_SHIFT = 0.26;        // Desktop: Anteil der Viewport-Höhe, um den Schritt 1
+                                      // anfangs höher (nah unter der Überschrift) starten zu lassen.
+      const LEAD_SHIFT_MOBILE = 0.10; // Mobil kleiner: sonst wird die große Nummer oben
+                                      // beim Start abgeschnitten. Startet damit etwas tiefer.
 
       function render() {
         const rect = section.getBoundingClientRect();
@@ -771,7 +773,8 @@
         // Panel startet nah unter der Überschrift (nach oben verschoben) und
         // gleitet in die vertikale Mitte, während die Überschrift rausscrollt.
         if (panel) {
-          const introY = -(1 - leadT) * vh * LEAD_SHIFT;
+          const shiftFrac = window.innerWidth <= 768 ? LEAD_SHIFT_MOBILE : LEAD_SHIFT;
+          const introY = -(1 - leadT) * vh * shiftFrac;
           panel.style.transform = 'translate3d(0,' + introY.toFixed(1) + 'px,0)';
         }
 
