@@ -3987,6 +3987,16 @@ html.preloader-skip .preloader {
   color: var(--char-on);
 }
 
+/* Opt-out: Auf Unterseiten, deren Hauptüberschrift beim Laden schon im Bild
+   ist, würde der Fill auf halbem Stand "hängen bleiben" (letzter Buchstabe
+   ungefüllt = sieht komisch aus). Dort erben die Buchstaben einfach die
+   normale Überschriften-Farbe → ganz normale, voll gefüllte Headline.
+   Aktiviert via <html data-no-headline-fill> auf der jeweiligen Seite. */
+[data-no-headline-fill] .char,
+[data-no-headline-fill] .char.is-visible {
+  color: inherit;
+}
+
 /* Dark-Sektion (z. B. Prozess): helle Schrift, dezent ausgegraut */
 [data-theme-target="dark"] {
   --char-dim: rgba(255, 255, 255, 0.16);
