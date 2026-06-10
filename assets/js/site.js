@@ -547,7 +547,10 @@
     if (typeof window.Lenis !== 'function') return;
 
     const lenis = new window.Lenis({
-      lerp: 0.09,
+      // lerp 0.13 statt 0.09: die Scroll-Position zieht schneller ans Ziel nach
+      // → das „hängt hinterher"-Gefühl auf dem Desktop nimmt ab, der Smooth-
+      // Scroll-Effekt bleibt aber erhalten.
+      lerp: 0.13,
       wheelMultiplier: 0.9,
       // syncTouch:false → Touch bleibt nativ (iOS-Momentum, Pull-to-Refresh).
       // Smoothing nur fürs Wheel/Trackpad.

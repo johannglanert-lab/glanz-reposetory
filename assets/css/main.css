@@ -630,8 +630,12 @@ html.preloader-skip .preloader {
   top: 0;
   z-index: 100;
   background: rgba(251, 250, 253, 0.85);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  /* Desktop-Blur von 20px auf 10px reduziert: auf Retina-Macs muss die GPU
+     diesen Sticky-Streifen pro Scroll-Frame neu blurren — 20px kostet dort
+     spürbar Füllrate, 10px sieht praktisch identisch aus, scrollt aber runder.
+     (Mobile lag aus genau dem Grund schon länger bei 10px.) */
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
   border-bottom: 1px solid transparent;
   transition: background var(--transition-base),
               border-color var(--transition-base),
