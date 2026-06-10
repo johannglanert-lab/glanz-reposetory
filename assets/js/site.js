@@ -537,6 +537,12 @@
     // Reduced-Motion: kein Lenis — nativer Scroll bleibt.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    // Touch-Geräte (Handy/Tablet): kein Lenis. Wir smoothen nur das Wheel
+    // (syncTouch:false), d.h. auf reinen Touch-Geräten bringt Lenis null Nutzen,
+    // hält aber einen Dauer-rAF-Loop am Laufen → unnötige Hauptthread-Last beim
+    // Scrollen. Nativer Touch-Scroll (mit iOS-Momentum) bleibt unverändert.
+    if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
+
     // Lenis nicht geladen? Silent fail — nativer Scroll funktioniert weiterhin.
     if (typeof window.Lenis !== 'function') return;
 
@@ -810,28 +816,36 @@
         });
       }
 
-      // Kontinuierlicher rAF-Loop, aber nur solange die Sektion sichtbar ist.
-      let running = false;
-      let rafId = 0;
-      function loop() {
-        render();
-        if (running) rafId = requestAnimationFrame(loop);
-      }
-      function start() {
-        if (!running) { running = true; rafId = requestAnimationFrame(loop); }
-      }
-      function stop() {
-        running = false;
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = 0;
+      // Scroll-getrieben statt freilaufender rAF-Loop: render() ist eine reine
+      // Funktion der Scroll-Position, daher reicht ein Render pro Frame *während
+      // sich gescrollt wird*. Im Stillstand läuft nichts → keine Dauerlast auf
+      // dem Hauptthread (entscheidend auf Mobile-CPUs). Gerendert wird nur, wenn
+      // die Sektion sichtbar ist.
+      let visible = false;
+      let ticking = false;
+      function schedule() {
+        if (!visible || ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { ticking = false; render(); });
       }
 
       const io = new IntersectionObserver(entries => {
-        entries.forEach(e => (e.isIntersecting ? start() : stop()));
+        entries.forEach(e => {
+          visible = e.isIntersecting;
+          if (visible) schedule(); // beim Eintreten Startzustand frisch setzen
+        });
       }, { threshold: 0 });
       io.observe(section);
 
+      // Lenis (Desktop) feuert pro Frame während des Smooth-Scrolls; auf Mobile
+      // sorgt der native Scroll-Listener für dasselbe. resize/orientation lösen
+      // ebenfalls ein Neuberechnen aus.
+      if (window.__glanzLenis && typeof window.__glanzLenis.on === 'function') {
+        window.__glanzLenis.on('scroll', schedule);
+      }
+      window.addEventListener('scroll', schedule, { passive: true });
       window.addEventListener('resize', render);
+      window.addEventListener('orientationchange', render);
       render(); // Startzustand sofort setzen (kein FOUC).
     });
   }
